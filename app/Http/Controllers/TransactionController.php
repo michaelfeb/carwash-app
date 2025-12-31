@@ -126,6 +126,7 @@ class TransactionController extends Controller
 
         return Inertia::render('transactions/show', [
             'transaction' => $transaction,
+            'paymentMethods' => PaymentMethod::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
