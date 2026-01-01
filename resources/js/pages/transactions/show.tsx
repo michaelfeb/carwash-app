@@ -41,15 +41,10 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
         >
             <Head title={`Transaction ${transaction.invoice_number}`} />
 
-            <div className="mx-auto max-w-4xl space-y-6 p-4 md:p-6">
+            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" asChild>
-                        <Link href="/transactions">
-                            <ArrowLeft className="h-4 w-4" />
-                        </Link>
-                    </Button>
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold tracking-tight">{transaction.invoice_number}</h1>
                         <p className="text-muted-foreground">Transaction details</p>

@@ -33,13 +33,8 @@ export default function StaffsEdit({ staff }: StaffsEditProps) {
         >
             <Head title="Edit Staff" />
 
-            <div className="mx-auto max-w-2xl space-y-6 p-4 md:p-6">
+            <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" asChild>
-                        <Link href="/staffs">
-                            <ArrowLeft className="h-4 w-4" />
-                        </Link>
-                    </Button>
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">Edit Staff</h1>
                         <p className="text-muted-foreground">Update staff information</p>

@@ -32,7 +32,7 @@ export default function PaymentMethodsEdit({ paymentMethod }: PaymentMethodsEdit
         >
             <Head title="Edit Payment Method" />
 
-            <div className="mx-auto max-w-2xl space-y-6 p-4 md:p-6">
+            <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" asChild>
                         <Link href="/payment-methods">

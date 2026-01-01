@@ -33,9 +33,11 @@ class CustomerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('customers/create');
+        return Inertia::render('customers/create', [
+            'redirectTo' => $request->query('redirect'),
+        ]);
     }
 
     /**
@@ -51,6 +53,11 @@ class CustomerController extends Controller
         ]);
 
         Customer::create($validated);
+
+        // Redirect back to transactions if coming from there
+        if ($request->input('redirect_to') === 'transactions') {
+            return redirect()->route('transactions.create')->with('success', 'Customer created successfully.');
+        }
 
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
