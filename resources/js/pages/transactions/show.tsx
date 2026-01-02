@@ -41,7 +41,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
         >
             <Head title={`Transaction ${transaction.invoice_number}`} />
 
-            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-6">
+            <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <div className="flex items-center gap-4">

@@ -58,6 +58,7 @@ class TransactionController extends Controller
         return Inertia::render('transactions/index', [
             'transactions' => $transactions,
             'filters' => $request->only(['wash_status', 'payment_status', 'date_from', 'date_to', 'search']),
+            'paymentMethods' => PaymentMethod::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
