@@ -1,3 +1,4 @@
+import { formatMoneyInput, parseMoneyInput } from '@/components/app/stats-card';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -85,10 +86,13 @@ export default function CarwashTypesEdit({ carwashType }: CarwashTypesEditProps)
                                     <Label htmlFor="min_price">Min Price (Rp)</Label>
                                     <Input
                                         id="min_price"
-                                        type="number"
-                                        value={data.min_price}
-                                        onChange={(e) => setData('min_price', e.target.value)}
-                                        placeholder="35000"
+                                        type="text"
+                                        value={formatMoneyInput(data.min_price)}
+                                        onChange={(e) => {
+                                            const numericValue = parseMoneyInput(e.target.value);
+                                            setData('min_price', String(numericValue));
+                                        }}
+                                        placeholder="35.000"
                                     />
                                     {errors.min_price && <p className="text-sm text-red-500">{errors.min_price}</p>}
                                 </div>
@@ -96,10 +100,13 @@ export default function CarwashTypesEdit({ carwashType }: CarwashTypesEditProps)
                                     <Label htmlFor="max_price">Max Price (Rp)</Label>
                                     <Input
                                         id="max_price"
-                                        type="number"
-                                        value={data.max_price}
-                                        onChange={(e) => setData('max_price', e.target.value)}
-                                        placeholder="40000"
+                                        type="text"
+                                        value={formatMoneyInput(data.max_price)}
+                                        onChange={(e) => {
+                                            const numericValue = parseMoneyInput(e.target.value);
+                                            setData('max_price', String(numericValue));
+                                        }}
+                                        placeholder="40.000"
                                     />
                                     {errors.max_price && <p className="text-sm text-red-500">{errors.max_price}</p>}
                                 </div>

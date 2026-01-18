@@ -51,3 +51,25 @@ export function formatRupiah(value: number): string {
 export function formatNumber(value: number): string {
     return new Intl.NumberFormat('id-ID').format(value);
 }
+
+// Format money input with thousand separators (dots) for input fields
+export function formatMoneyInput(value: string | number): string {
+    if (value === '' || value === null || value === undefined) return '';
+
+    // Convert to string and remove all non-digit characters
+    const numericValue = String(value).replace(/\D/g, '');
+
+    if (numericValue === '') return '';
+
+    // Format with thousand separators
+    return new Intl.NumberFormat('id-ID').format(parseInt(numericValue));
+}
+
+// Parse formatted money input back to number
+export function parseMoneyInput(value: string): number {
+    if (!value) return 0;
+
+    // Remove all dots (thousand separators) and parse to number
+    const numericValue = value.replace(/\./g, '');
+    return parseInt(numericValue) || 0;
+}

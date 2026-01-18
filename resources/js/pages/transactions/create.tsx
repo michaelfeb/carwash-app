@@ -1,4 +1,4 @@
-import { formatRupiah } from '@/components/app/stats-card';
+import { formatMoneyInput, formatRupiah, parseMoneyInput } from '@/components/app/stats-card';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
@@ -207,9 +207,12 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">Rp</span>
                                         <Input
-                                            type="number"
-                                            value={data.price}
-                                            onChange={(e) => setData('price', e.target.value)}
+                                            type="text"
+                                            value={formatMoneyInput(data.price)}
+                                            onChange={(e) => {
+                                                const numericValue = parseMoneyInput(e.target.value);
+                                                setData('price', String(numericValue));
+                                            }}
                                             placeholder="0"
                                             className="pl-9 font-medium"
                                         />
@@ -285,9 +288,12 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">Rp</span>
                                             <Input
-                                                type="number"
-                                                value={assignment.fee}
-                                                onChange={(e) => updateStaffFee(index, e.target.value)}
+                                                type="text"
+                                                value={formatMoneyInput(assignment.fee)}
+                                                onChange={(e) => {
+                                                    const numericValue = parseMoneyInput(e.target.value);
+                                                    updateStaffFee(index, String(numericValue));
+                                                }}
                                                 className="h-9 pl-8 text-right font-mono"
                                             />
                                         </div>
