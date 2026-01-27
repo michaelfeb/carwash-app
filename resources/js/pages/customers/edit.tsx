@@ -28,11 +28,11 @@ export default function CustomersEdit({ customer }: CustomersEditProps) {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Customers', href: '/customers' },
-                { title: 'Edit', href: `/customers/${customer.id}/edit` },
+                { title: 'Pelanggan', href: '/customers' },
+                { title: 'Ubah', href: `/customers/${customer.id}/edit` },
             ]}
         >
-            <Head title="Edit Customer" />
+            <Head title="Ubah Pelanggan" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
@@ -42,59 +42,59 @@ export default function CustomersEdit({ customer }: CustomersEditProps) {
                         </Link>
                     </Button>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Edit Customer</h1>
-                        <p className="text-muted-foreground">Update customer information</p>
+                        <h1 className="text-2xl font-bold tracking-tight">Ubah Pelanggan</h1>
+                        <p className="text-muted-foreground">Perbarui informasi pelanggan</p>
                     </div>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Customer Information</CardTitle>
-                        <CardDescription>Update the customer details</CardDescription>
+                        <CardTitle>Informasi Pelanggan</CardTitle>
+                        <CardDescription>Perbarui detail pelanggan</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Nama</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
-                                    placeholder="Enter customer name"
+                                    placeholder="Masukkan nama pelanggan"
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="phone">Phone (optional)</Label>
+                                <Label htmlFor="phone">Telepon (opsional)</Label>
                                 <Input
                                     id="phone"
                                     value={data.phone}
                                     onChange={(e) => setData('phone', e.target.value)}
-                                    placeholder="Enter phone number"
+                                    placeholder="Masukkan nomor telepon"
                                 />
                                 {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="address">Address (optional)</Label>
+                                <Label htmlFor="address">Alamat (opsional)</Label>
                                 <Textarea
                                     id="address"
                                     value={data.address}
                                     onChange={(e) => setData('address', e.target.value)}
-                                    placeholder="Enter address"
+                                    placeholder="Masukkan alamat"
                                     rows={2}
                                 />
                                 {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="notes">Notes (optional)</Label>
+                                <Label htmlFor="notes">Catatan (opsional)</Label>
                                 <Textarea
                                     id="notes"
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
-                                    placeholder="Any additional notes"
+                                    placeholder="Catatan tambahan"
                                     rows={2}
                                 />
                                 {errors.notes && <p className="text-sm text-red-500">{errors.notes}</p>}
@@ -103,10 +103,10 @@ export default function CustomersEdit({ customer }: CustomersEditProps) {
                             <div className="flex gap-4 pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Update Customer
+                                    Perbarui Pelanggan
                                 </Button>
                                 <Button variant="outline" asChild>
-                                    <Link href="/customers">Cancel</Link>
+                                    <Link href="/customers">Batal</Link>
                                 </Button>
                             </div>
                         </form>

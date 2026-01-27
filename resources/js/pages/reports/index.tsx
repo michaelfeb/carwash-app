@@ -28,15 +28,15 @@ export default function ReportsIndex() {
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Reports', href: '/reports' }]}>
-            <Head title="Reports" />
+        <AppLayout breadcrumbs={[{ title: 'Laporan', href: '/reports' }]}>
+            <Head title="Laporan" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Reports"
-                    description="Generate and export business reports"
+                    title="Laporan"
+                    description="Buat dan ekspor laporan bisnis"
                 />
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -45,13 +45,13 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5 text-primary" />
-                                Daily Transaction Report
+                                Laporan Transaksi Harian
                             </CardTitle>
-                            <CardDescription>List of all transactions for a specific day</CardDescription>
+                            <CardDescription>Daftar semua transaksi untuk hari tertentu</CardDescription>
                         </CardHeader>
                         <CardContent className="flex-1 space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="daily-date">Date</Label>
+                                <Label htmlFor="daily-date">Tanggal</Label>
                                 <Input
                                     id="daily-date"
                                     type="date"
@@ -64,7 +64,7 @@ export default function ReportsIndex() {
                                 onClick={() => handleDownload(`/reports/daily/export?date=${dailyDate}`)}
                             >
                                 <Download className="mr-2 h-4 w-4" />
-                                Export PDF
+                                Ekspor PDF
                             </Button>
                         </CardContent>
                     </Card>
@@ -74,13 +74,13 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <BarChart className="h-5 w-5 text-primary" />
-                                Monthly Revenue Summary
+                                Ringkasan Pendapatan Bulanan
                             </CardTitle>
-                            <CardDescription>Revenue summary grouped by day for a month</CardDescription>
+                            <CardDescription>Ringkasan pendapatan dikelompokkan per hari untuk satu bulan</CardDescription>
                         </CardHeader>
                         <CardContent className="flex-1 space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="monthly-month">Month</Label>
+                                <Label htmlFor="monthly-month">Bulan</Label>
                                 <Input
                                     id="monthly-month"
                                     type="month"
@@ -93,7 +93,7 @@ export default function ReportsIndex() {
                                 onClick={() => handleDownload(`/reports/monthly/export?month=${monthlyMonth}`)}
                             >
                                 <Download className="mr-2 h-4 w-4" />
-                                Export PDF
+                                Ekspor PDF
                             </Button>
                         </CardContent>
                     </Card>
@@ -103,14 +103,14 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Car className="h-5 w-5 text-primary" />
-                                By Car Type
+                                Berdasarkan Jenis Mobil
                             </CardTitle>
-                            <CardDescription>Revenue breakdown by car wash type</CardDescription>
+                            <CardDescription>Rincian pendapatan berdasarkan jenis cuci mobil</CardDescription>
                         </CardHeader>
                         <CardContent className="flex-1 space-y-4">
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="cartype-from">From</Label>
+                                    <Label htmlFor="cartype-from">Dari</Label>
                                     <Input
                                         id="cartype-from"
                                         type="date"
@@ -119,7 +119,7 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="cartype-to">To</Label>
+                                    <Label htmlFor="cartype-to">Sampai</Label>
                                     <Input
                                         id="cartype-to"
                                         type="date"
@@ -133,7 +133,7 @@ export default function ReportsIndex() {
                                 onClick={() => handleDownload(`/reports/car-type/export?date_from=${carTypeDateFrom}&date_to=${carTypeDateTo}`)}
                             >
                                 <Download className="mr-2 h-4 w-4" />
-                                Export PDF
+                                Ekspor PDF
                             </Button>
                         </CardContent>
                     </Card>
@@ -143,14 +143,14 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Users className="h-5 w-5 text-primary" />
-                                Staff Performance
+                                Kinerja Staf
                             </CardTitle>
-                            <CardDescription>Performance metrics for each staff member</CardDescription>
+                            <CardDescription>Metrik kinerja untuk setiap anggota staf</CardDescription>
                         </CardHeader>
                         <CardContent className="flex-1 space-y-4">
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="staff-from">From</Label>
+                                    <Label htmlFor="staff-from">Dari</Label>
                                     <Input
                                         id="staff-from"
                                         type="date"
@@ -159,7 +159,7 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="staff-to">To</Label>
+                                    <Label htmlFor="staff-to">Sampai</Label>
                                     <Input
                                         id="staff-to"
                                         type="date"
@@ -173,7 +173,7 @@ export default function ReportsIndex() {
                                 onClick={() => handleDownload(`/reports/staff/export?date_from=${staffDateFrom}&date_to=${staffDateTo}`)}
                             >
                                 <Download className="mr-2 h-4 w-4" />
-                                Export PDF
+                                Ekspor PDF
                             </Button>
                         </CardContent>
                     </Card>
@@ -183,14 +183,14 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <TrendingUp className="h-5 w-5 text-primary" />
-                                Income Trend
+                                Tren Pendapatan
                             </CardTitle>
-                            <CardDescription>Daily revenue trend over a period</CardDescription>
+                            <CardDescription>Tren pendapatan harian selama periode tertentu</CardDescription>
                         </CardHeader>
                         <CardContent className="flex-1 space-y-4">
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="trend-from">From</Label>
+                                    <Label htmlFor="trend-from">Dari</Label>
                                     <Input
                                         id="trend-from"
                                         type="date"
@@ -199,7 +199,7 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="trend-to">To</Label>
+                                    <Label htmlFor="trend-to">Sampai</Label>
                                     <Input
                                         id="trend-to"
                                         type="date"
@@ -213,7 +213,7 @@ export default function ReportsIndex() {
                                 onClick={() => handleDownload(`/reports/income-trend/export?date_from=${trendDateFrom}&date_to=${trendDateTo}`)}
                             >
                                 <Download className="mr-2 h-4 w-4" />
-                                Export PDF
+                                Ekspor PDF
                             </Button>
                         </CardContent>
                     </Card>

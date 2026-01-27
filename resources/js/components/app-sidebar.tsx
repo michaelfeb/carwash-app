@@ -32,22 +32,22 @@ export function AppSidebar() {
     // Navigation items for all users
     const mainNavItems: NavItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Dasbor',
             href: '/dashboard',
             icon: LayoutGrid,
         },
         {
-            title: 'Transactions',
+            title: 'Transaksi',
             href: '/transactions',
             icon: ClipboardList,
         },
         {
-            title: 'Customers',
+            title: 'Pelanggan',
             href: '/customers',
             icon: UserCircle,
         },
         {
-            title: 'Reports',
+            title: 'Laporan',
             href: '/reports',
             icon: FileText,
         },
@@ -56,22 +56,22 @@ export function AppSidebar() {
     // Owner-only navigation items
     const ownerNavItems: NavItem[] = [
         {
-            title: 'Users',
+            title: 'Pengguna',
             href: '/users',
             icon: Users,
         },
         {
-            title: 'Staffs',
+            title: 'Staf',
             href: '/staffs',
             icon: Wrench,
         },
         {
-            title: 'Carwash Types',
+            title: 'Jenis Cuci',
             href: '/carwash-types',
             icon: Car,
         },
         {
-            title: 'Payment Methods',
+            title: 'Metode Pembayaran',
             href: '/payment-methods',
             icon: CreditCard,
         },
@@ -79,7 +79,7 @@ export function AppSidebar() {
 
     const footerNavItems: NavItem[] = [
         {
-            title: 'Settings',
+            title: 'Pengaturan',
             href: '/settings/profile',
             icon: Settings,
         },
@@ -101,7 +101,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} label="Menu" />
-                {isOwner && <NavMain items={ownerNavItems} label="Management" />}
+                {isOwner && <NavMain items={ownerNavItems} label="Manajemen" />}
             </SidebarContent>
 
             <SidebarFooter>

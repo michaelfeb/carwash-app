@@ -21,7 +21,7 @@ interface PaymentMethodsIndexProps {
 
 export default function PaymentMethodsIndex({ paymentMethods }: PaymentMethodsIndexProps) {
     const handleDelete = (method: PaymentMethod) => {
-        if (confirm(`Are you sure you want to delete "${method.name}"?`)) {
+        if (confirm(`Apakah Anda yakin ingin menghapus "${method.name}"?`)) {
             router.delete(`/payment-methods/${method.id}`);
         }
     };
@@ -29,12 +29,12 @@ export default function PaymentMethodsIndex({ paymentMethods }: PaymentMethodsIn
     const columns: ColumnDef<PaymentMethod>[] = [
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: 'Nama',
             cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
         },
         {
             accessorKey: 'transactions_count',
-            header: 'Times Used',
+            header: 'Kali Digunakan',
             cell: ({ row }) => row.original.transactions_count || 0,
         },
         {
@@ -56,7 +56,7 @@ export default function PaymentMethodsIndex({ paymentMethods }: PaymentMethodsIn
                         <DropdownMenuItem asChild>
                             <Link href={`/payment-methods/${row.original.id}/edit`}>
                                 <Pencil className="mr-2 h-4 w-4" />
-                                Edit
+                                Ubah
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -64,7 +64,7 @@ export default function PaymentMethodsIndex({ paymentMethods }: PaymentMethodsIn
                             onClick={() => handleDelete(row.original)}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Hapus
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -73,19 +73,19 @@ export default function PaymentMethodsIndex({ paymentMethods }: PaymentMethodsIn
     ];
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Payment Methods', href: '/payment-methods' }]}>
-            <Head title="Payment Methods" />
+        <AppLayout breadcrumbs={[{ title: 'Metode Pembayaran', href: '/payment-methods' }]}>
+            <Head title="Metode Pembayaran" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Payment Methods"
-                    description="Manage available payment methods"
-                    action={{ label: 'Add Method', href: '/payment-methods/create' }}
+                    title="Metode Pembayaran"
+                    description="Kelola metode pembayaran yang tersedia"
+                    action={{ label: 'Tambah Metode', href: '/payment-methods/create' }}
                 />
 
-                <DataTable columns={columns} data={paymentMethods} searchKey="name" searchPlaceholder="Search methods..." />
+                <DataTable columns={columns} data={paymentMethods} searchKey="name" searchPlaceholder="Cari metode..." />
             </div>
         </AppLayout>
     );

@@ -27,45 +27,45 @@ export default function StaffsEdit({ staff }: StaffsEditProps) {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Staffs', href: '/staffs' },
-                { title: 'Edit', href: `/staffs/${staff.id}/edit` },
+                { title: 'Staf', href: '/staffs' },
+                { title: 'Ubah', href: `/staffs/${staff.id}/edit` },
             ]}
         >
-            <Head title="Edit Staff" />
+            <Head title="Ubah Staf" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Edit Staff</h1>
-                        <p className="text-muted-foreground">Update staff information</p>
+                        <h1 className="text-2xl font-bold tracking-tight">Ubah Staf</h1>
+                        <p className="text-muted-foreground">Perbarui informasi staf</p>
                     </div>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Staff Information</CardTitle>
-                        <CardDescription>Update the staff details</CardDescription>
+                        <CardTitle>Informasi Staf</CardTitle>
+                        <CardDescription>Perbarui detail staf</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Nama</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
-                                    placeholder="Enter staff name"
+                                    placeholder="Masukkan nama staf"
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="phone">Phone (optional)</Label>
+                                <Label htmlFor="phone">Telepon (opsional)</Label>
                                 <Input
                                     id="phone"
                                     value={data.phone}
                                     onChange={(e) => setData('phone', e.target.value)}
-                                    placeholder="Enter phone number"
+                                    placeholder="Masukkan nomor telepon"
                                 />
                                 {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
                             </div>
@@ -76,16 +76,16 @@ export default function StaffsEdit({ staff }: StaffsEditProps) {
                                     checked={data.is_active}
                                     onCheckedChange={(checked) => setData('is_active', checked as boolean)}
                                 />
-                                <Label htmlFor="is_active">Active</Label>
+                                <Label htmlFor="is_active">Aktif</Label>
                             </div>
 
                             <div className="flex gap-4 pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Update Staff
+                                    Perbarui Staf
                                 </Button>
                                 <Button variant="outline" asChild>
-                                    <Link href="/staffs">Cancel</Link>
+                                    <Link href="/staffs">Batal</Link>
                                 </Button>
                             </div>
                         </form>

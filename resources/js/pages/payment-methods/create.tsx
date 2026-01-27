@@ -21,11 +21,11 @@ export default function PaymentMethodsCreate() {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Payment Methods', href: '/payment-methods' },
-                { title: 'Create', href: '/payment-methods/create' },
+                { title: 'Metode Pembayaran', href: '/payment-methods' },
+                { title: 'Buat', href: '/payment-methods/create' },
             ]}
         >
-            <Head title="Create Payment Method" />
+            <Head title="Buat Metode Pembayaran" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
@@ -35,25 +35,25 @@ export default function PaymentMethodsCreate() {
                         </Link>
                     </Button>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Create Payment Method</h1>
-                        <p className="text-muted-foreground">Add a new payment method</p>
+                        <h1 className="text-2xl font-bold tracking-tight">Buat Metode Pembayaran</h1>
+                        <p className="text-muted-foreground">Tambahkan metode pembayaran baru</p>
                     </div>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Payment Method</CardTitle>
-                        <CardDescription>Enter the payment method name</CardDescription>
+                        <CardTitle>Metode Pembayaran</CardTitle>
+                        <CardDescription>Masukkan nama metode pembayaran</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Nama</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
-                                    placeholder="e.g., Credit Card"
+                                    placeholder="contoh: Kartu Kredit"
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                             </div>
@@ -64,16 +64,16 @@ export default function PaymentMethodsCreate() {
                                     checked={data.is_active}
                                     onCheckedChange={(checked) => setData('is_active', checked as boolean)}
                                 />
-                                <Label htmlFor="is_active">Active</Label>
+                                <Label htmlFor="is_active">Aktif</Label>
                             </div>
 
                             <div className="flex gap-4 pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Create Method
+                                    Buat Metode
                                 </Button>
                                 <Button variant="outline" asChild>
-                                    <Link href="/payment-methods">Cancel</Link>
+                                    <Link href="/payment-methods">Batal</Link>
                                 </Button>
                             </div>
                         </form>

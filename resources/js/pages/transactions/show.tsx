@@ -35,11 +35,11 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Transactions', href: '/transactions' },
+                { title: 'Transaksi', href: '/transactions' },
                 { title: transaction.invoice_number, href: `/transactions/${transaction.id}` },
             ]}
         >
-            <Head title={`Transaction ${transaction.invoice_number}`} />
+            <Head title={`Transaksi ${transaction.invoice_number}`} />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
@@ -47,7 +47,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                 <div className="flex items-center gap-4">
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold tracking-tight">{transaction.invoice_number}</h1>
-                        <p className="text-muted-foreground">Transaction details</p>
+                        <p className="text-muted-foreground">Detail transaksi</p>
                     </div>
                     <div className="flex gap-2">
                         <WashStatusBadge status={transaction.wash_status} />
@@ -61,31 +61,31 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Car className="h-5 w-5" />
-                                Transaction Info
+                                Info Transaksi
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p className="text-muted-foreground">Invoice Number</p>
+                                    <p className="text-muted-foreground">Nomor Faktur</p>
                                     <p className="font-medium">{transaction.invoice_number}</p>
                                 </div>
                                 <div>
-                                    <p className="text-muted-foreground">Created At</p>
+                                    <p className="text-muted-foreground">Dibuat Pada</p>
                                     <p className="font-medium">{new Date(transaction.created_at).toLocaleString('id-ID')}</p>
                                 </div>
                                 <div>
-                                    <p className="text-muted-foreground">Carwash Type</p>
+                                    <p className="text-muted-foreground">Jenis Cuci</p>
                                     <p className="font-medium">{transaction.carwash_type?.name}</p>
                                 </div>
                                 <div>
-                                    <p className="text-muted-foreground">License Plate</p>
+                                    <p className="text-muted-foreground">Plat Nomor</p>
                                     <p className="font-medium">{transaction.license_plate || '-'}</p>
                                 </div>
                             </div>
                             <Separator />
                             <div className="flex items-center justify-between">
-                                <span className="text-lg font-medium">Price</span>
+                                <span className="text-lg font-medium">Harga</span>
                                 <span className="text-2xl font-bold text-primary">{formatRupiah(transaction.price)}</span>
                             </div>
                         </CardContent>
@@ -96,31 +96,31 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <User className="h-5 w-5" />
-                                Customer Info
+                                Info Pelanggan
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {transaction.customer ? (
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <p className="text-muted-foreground">Name</p>
+                                        <p className="text-muted-foreground">Nama</p>
                                         <p className="font-medium">{transaction.customer.name}</p>
                                     </div>
                                     <div>
-                                        <p className="text-muted-foreground">Phone</p>
+                                        <p className="text-muted-foreground">Telepon</p>
                                         <p className="font-medium">{transaction.customer.phone || '-'}</p>
                                     </div>
                                     <div className="col-span-2">
-                                        <p className="text-muted-foreground">Address</p>
+                                        <p className="text-muted-foreground">Alamat</p>
                                         <p className="font-medium">{transaction.customer.address || '-'}</p>
                                     </div>
                                 </div>
                             ) : (
-                                <p className="text-muted-foreground">No customer information</p>
+                                <p className="text-muted-foreground">Tidak ada informasi pelanggan</p>
                             )}
                             <Separator />
                             <div className="text-sm">
-                                <p className="text-muted-foreground">Cashier</p>
+                                <p className="text-muted-foreground">Kasir</p>
                                 <p className="font-medium">{transaction.user?.name}</p>
                             </div>
                         </CardContent>
@@ -130,16 +130,16 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                 {/* Staff Assignments */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Assigned Staff</CardTitle>
-                        <CardDescription>Washmen assigned to this transaction</CardDescription>
+                        <CardTitle>Staf Ditugaskan</CardTitle>
+                        <CardDescription>Pencuci yang ditugaskan untuk transaksi ini</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Phone</TableHead>
-                                    <TableHead className="text-right">Fee</TableHead>
+                                    <TableHead>Nama</TableHead>
+                                    <TableHead>Telepon</TableHead>
+                                    <TableHead className="text-right">Upah</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -152,7 +152,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                                 ))}
                                 <TableRow className="bg-muted/50">
                                     <TableCell colSpan={2} className="font-medium">
-                                        Total Staff Fees
+                                        Total Upah Staf
                                     </TableCell>
                                     <TableCell className="text-right font-bold">{formatRupiah(totalStaffFees)}</TableCell>
                                 </TableRow>
@@ -166,43 +166,43 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Calendar className="h-5 w-5" />
-                            Update Status
+                            Perbarui Status
                         </CardTitle>
-                        <CardDescription>Change wash or payment status</CardDescription>
+                        <CardDescription>Ubah status cuci atau pembayaran</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid gap-4 sm:grid-cols-3">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Wash Status</label>
+                                <label className="text-sm font-medium">Status Cuci</label>
                                 <Select value={washStatus} onValueChange={(v: 'waiting' | 'washing' | 'done') => setWashStatus(v)}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="waiting">Waiting</SelectItem>
-                                        <SelectItem value="washing">Washing</SelectItem>
-                                        <SelectItem value="done">Done</SelectItem>
+                                        <SelectItem value="waiting">Menunggu</SelectItem>
+                                        <SelectItem value="washing">Dicuci</SelectItem>
+                                        <SelectItem value="done">Selesai</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Payment Status</label>
+                                <label className="text-sm font-medium">Status Pembayaran</label>
                                 <Select value={paymentStatus} onValueChange={(v: 'unpaid' | 'paid') => setPaymentStatus(v)}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="unpaid">Unpaid</SelectItem>
-                                        <SelectItem value="paid">Paid</SelectItem>
+                                        <SelectItem value="unpaid">Belum Bayar</SelectItem>
+                                        <SelectItem value="paid">Lunas</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             {paymentStatus === 'paid' && (
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Payment Method</label>
+                                    <label className="text-sm font-medium">Metode Pembayaran</label>
                                     <Select value={paymentMethodId} onValueChange={setPaymentMethodId}>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select method" />
+                                            <SelectValue placeholder="Pilih metode" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {paymentMethods?.map((method) => (
@@ -215,7 +215,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                                 </div>
                             )}
                         </div>
-                        <Button onClick={handleStatusUpdate}>Update Status</Button>
+                        <Button onClick={handleStatusUpdate}>Perbarui Status</Button>
                     </CardContent>
                 </Card>
 
@@ -223,7 +223,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                 {transaction.notes && (
                     <Card>
                         <CardHeader>
-                            <CardTitle>Notes</CardTitle>
+                            <CardTitle>Catatan</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p className="whitespace-pre-wrap">{transaction.notes}</p>

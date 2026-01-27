@@ -31,14 +31,14 @@ export default function Welcome() {
                                 href={dashboard()}
                                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25"
                             >
-                                Go to Dashboard
+                                Ke Dasbor
                             </Link>
                         ) : (
                             <Link
                                 href={login()}
                                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/25"
                             >
-                                Staff Login
+                                Masuk Staf
                             </Link>
                         )}
                     </nav>
@@ -48,18 +48,18 @@ export default function Welcome() {
                 <main className="container mx-auto flex flex-1 flex-col items-center justify-center px-6 text-center">
                     <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-400">
                         <Sparkles className="h-4 w-4" />
-                        Staff Management Portal
+                        Portal Manajemen Staf
                     </div>
 
                     <h1 className="mb-6 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">
-                        Manage Your
-                        <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"> Carwash </span>
-                        Business
+                        Kelola Bisnis
+                        <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"> Cuci Mobil </span>
+                        Anda
                     </h1>
 
                     <p className="mb-10 max-w-xl text-lg text-slate-400">
-                        Streamline your operations with our comprehensive management system.
-                        Track transactions, manage staff, and generate reports effortlessly.
+                        Sederhanakan operasional Anda dengan sistem manajemen komprehensif kami.
+                        Lacak transaksi, kelola staf, dan buat laporan dengan mudah.
                     </p>
 
                     {!auth.user && (
@@ -68,7 +68,7 @@ export default function Welcome() {
                             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:shadow-xl hover:shadow-blue-500/20"
                         >
                             <Shield className="h-5 w-5" />
-                            Access Staff Portal
+                            Akses Portal Staf
                         </Link>
                     )}
 
@@ -78,9 +78,9 @@ export default function Welcome() {
                             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 transition-colors group-hover:bg-blue-500/20">
                                 <Car className="h-6 w-6" />
                             </div>
-                            <h3 className="mb-2 text-lg font-semibold text-white">Transactions</h3>
+                            <h3 className="mb-2 text-lg font-semibold text-white">Transaksi</h3>
                             <p className="text-sm text-slate-400">
-                                Create and track car wash transactions with real-time status updates.
+                                Buat dan lacak transaksi cuci mobil dengan pembaruan status real-time.
                             </p>
                         </div>
 
@@ -88,9 +88,9 @@ export default function Welcome() {
                             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400 transition-colors group-hover:bg-cyan-500/20">
                                 <Droplets className="h-6 w-6" />
                             </div>
-                            <h3 className="mb-2 text-lg font-semibold text-white">Staff Management</h3>
+                            <h3 className="mb-2 text-lg font-semibold text-white">Manajemen Staf</h3>
                             <p className="text-sm text-slate-400">
-                                Assign washmen to jobs and track their performance metrics.
+                                Tugaskan pencuci ke pekerjaan dan lacak metrik kinerja mereka.
                             </p>
                         </div>
 
@@ -98,9 +98,9 @@ export default function Welcome() {
                             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition-colors group-hover:bg-emerald-500/20">
                                 <Sparkles className="h-6 w-6" />
                             </div>
-                            <h3 className="mb-2 text-lg font-semibold text-white">Reports</h3>
+                            <h3 className="mb-2 text-lg font-semibold text-white">Laporan</h3>
                             <p className="text-sm text-slate-400">
-                                Generate daily, monthly, and performance reports with one click.
+                                Buat laporan harian, bulanan, dan kinerja dengan satu klik.
                             </p>
                         </div>
                     </div>
@@ -109,7 +109,7 @@ export default function Welcome() {
                 {/* Footer */}
                 <footer className="container mx-auto px-6 py-8 text-center">
                     <p className="text-sm text-slate-500">
-                        © {new Date().getFullYear()} CarWash Pro. Internal staff portal.
+                        © {new Date().getFullYear()} CarWash Pro. Portal staf internal.
                     </p>
                 </footer>
             </div>

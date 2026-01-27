@@ -22,7 +22,7 @@ interface StaffsIndexProps {
 
 export default function StaffsIndex({ staffs }: StaffsIndexProps) {
     const handleDelete = (staff: Staff) => {
-        if (confirm(`Are you sure you want to delete "${staff.name}"?`)) {
+        if (confirm(`Apakah Anda yakin ingin menghapus "${staff.name}"?`)) {
             router.delete(`/staffs/${staff.id}`);
         }
     };
@@ -30,22 +30,22 @@ export default function StaffsIndex({ staffs }: StaffsIndexProps) {
     const columns: ColumnDef<Staff>[] = [
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: 'Nama',
             cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
         },
         {
             accessorKey: 'phone',
-            header: 'Phone',
+            header: 'Telepon',
             cell: ({ row }) => row.original.phone || '-',
         },
         {
             accessorKey: 'transactions_count',
-            header: 'Total Jobs',
+            header: 'Total Pekerjaan',
             cell: ({ row }) => row.original.transactions_count || 0,
         },
         {
             accessorKey: 'total_earnings',
-            header: 'Total Earnings',
+            header: 'Total Pendapatan',
             cell: ({ row }) => formatRupiah(row.original.total_earnings || 0),
         },
         {
@@ -67,7 +67,7 @@ export default function StaffsIndex({ staffs }: StaffsIndexProps) {
                         <DropdownMenuItem asChild>
                             <Link href={`/staffs/${row.original.id}/edit`}>
                                 <Pencil className="mr-2 h-4 w-4" />
-                                Edit
+                                Ubah
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -75,7 +75,7 @@ export default function StaffsIndex({ staffs }: StaffsIndexProps) {
                             onClick={() => handleDelete(row.original)}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Hapus
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -84,19 +84,19 @@ export default function StaffsIndex({ staffs }: StaffsIndexProps) {
     ];
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Staffs', href: '/staffs' }]}>
-            <Head title="Staffs" />
+        <AppLayout breadcrumbs={[{ title: 'Staf', href: '/staffs' }]}>
+            <Head title="Staf" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Staffs"
-                    description="Manage washmen staff members"
-                    action={{ label: 'Add Staff', href: '/staffs/create' }}
+                    title="Staf"
+                    description="Kelola anggota staf pencuci"
+                    action={{ label: 'Tambah Staf', href: '/staffs/create' }}
                 />
 
-                <DataTable columns={columns} data={staffs} searchKey="name" searchPlaceholder="Search staffs..." />
+                <DataTable columns={columns} data={staffs} searchKey="name" searchPlaceholder="Cari staf..." />
             </div>
         </AppLayout>
     );

@@ -15,54 +15,54 @@ interface DashboardProps {
 
 export default function Dashboard({ stats, recentTransactions }: DashboardProps) {
     return (
-        <AppLayout breadcrumbs={[{ title: 'Dashboard', href: '/dashboard' }]}>
-            <Head title="Dashboard" />
+        <AppLayout breadcrumbs={[{ title: 'Dasbor', href: '/dashboard' }]}>
+            <Head title="Dasbor" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 {/* Page Header */}
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-                    <p className="text-muted-foreground">Welcome back! Here's an overview of your carwash business.</p>
+                    <h1 className="text-2xl font-bold tracking-tight">Dasbor</h1>
+                    <p className="text-muted-foreground">Selamat datang! Berikut ringkasan bisnis cuci mobil Anda.</p>
                 </div>
 
                 {/* Stats Cards */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                     <StatsCard
-                        title="Today's Transactions"
+                        title="Transaksi Hari Ini"
                         value={stats.todayTransactions}
-                        description="Cars washed today"
+                        description="Mobil dicuci hari ini"
                         icon={Car}
                     />
                     <StatsCard
-                        title="Today's Revenue"
+                        title="Pendapatan Hari Ini"
                         value={formatRupiah(stats.todayRevenue)}
-                        description="Income today"
+                        description="Penghasilan hari ini"
                         icon={DollarSign}
                     />
                     <StatsCard
-                        title="Pending Payments"
+                        title="Pembayaran Tertunda"
                         value={stats.pendingPayments}
-                        description="Awaiting payment"
+                        description="Menunggu pembayaran"
                         icon={CreditCard}
                     />
                     <StatsCard
-                        title="Cars In Progress"
+                        title="Mobil Sedang Dicuci"
                         value={stats.carsInProgress}
-                        description="Currently washing"
+                        description="Sedang dalam proses"
                         icon={Clock}
                     />
                     <StatsCard
-                        title="Total Customers"
+                        title="Total Pelanggan"
                         value={stats.totalCustomers}
-                        description="Registered customers"
+                        description="Pelanggan terdaftar"
                         icon={Users}
                     />
                     <StatsCard
-                        title="Active Staff"
+                        title="Staf Aktif"
                         value={stats.activeStaff}
-                        description="Available washmen"
+                        description="Pencuci tersedia"
                         icon={Wrench}
                     />
                 </div>
@@ -72,11 +72,11 @@ export default function Dashboard({ stats, recentTransactions }: DashboardProps)
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
-                                <CardTitle>Recent Transactions</CardTitle>
-                                <CardDescription>Latest 5 transactions from today</CardDescription>
+                                <CardTitle>Transaksi Terbaru</CardTitle>
+                                <CardDescription>5 transaksi terakhir hari ini</CardDescription>
                             </div>
                             <Link href="/transactions" className="text-sm font-medium text-primary hover:underline">
-                                View all
+                                Lihat semua
                             </Link>
                         </div>
                     </CardHeader>
@@ -85,12 +85,12 @@ export default function Dashboard({ stats, recentTransactions }: DashboardProps)
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Invoice</TableHead>
-                                        <TableHead>Customer</TableHead>
-                                        <TableHead>Type</TableHead>
-                                        <TableHead className="text-right">Price</TableHead>
-                                        <TableHead className="text-center">Wash Status</TableHead>
-                                        <TableHead className="text-center">Payment</TableHead>
+                                        <TableHead>Faktur</TableHead>
+                                        <TableHead>Pelanggan</TableHead>
+                                        <TableHead>Jenis</TableHead>
+                                        <TableHead className="text-right">Harga</TableHead>
+                                        <TableHead className="text-center">Status Cuci</TableHead>
+                                        <TableHead className="text-center">Pembayaran</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -113,9 +113,9 @@ export default function Dashboard({ stats, recentTransactions }: DashboardProps)
                         ) : (
                             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
                                 <Car className="h-12 w-12 mb-4" />
-                                <p>No transactions yet today</p>
+                                <p>Belum ada transaksi hari ini</p>
                                 <Link href="/transactions/create" className="mt-2 text-primary hover:underline">
-                                    Create your first transaction
+                                    Buat transaksi pertama Anda
                                 </Link>
                             </div>
                         )}

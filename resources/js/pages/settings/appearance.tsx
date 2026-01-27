@@ -10,7 +10,7 @@ import { edit as editAppearance } from '@/routes/appearance';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Appearance settings',
+        title: 'Pengaturan tampilan',
         href: editAppearance().url,
     },
 ];
@@ -18,13 +18,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Appearance() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Appearance settings" />
+            <Head title="Pengaturan tampilan" />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <HeadingSmall
-                        title="Appearance settings"
-                        description="Update your account's appearance settings"
+                        title="Pengaturan tampilan"
+                        description="Perbarui pengaturan tampilan akun Anda"
                     />
                     <AppearanceTabs />
                 </div>

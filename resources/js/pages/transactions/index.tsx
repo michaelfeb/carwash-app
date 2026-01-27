@@ -60,7 +60,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
     };
 
     const handleDelete = (transaction: Transaction) => {
-        if (confirm(`Are you sure you want to delete transaction ${transaction.invoice_number}?`)) {
+        if (confirm(`Apakah Anda yakin ingin menghapus transaksi ${transaction.invoice_number}?`)) {
             router.delete(`/transactions/${transaction.id}`);
         }
     };
@@ -91,11 +91,11 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
     const columns: ColumnDef<Transaction>[] = [
         {
             accessorKey: 'invoice_number',
-            header: 'Invoice',
+            header: 'Faktur',
             cell: ({ row }) => (
                 <div className="flex flex-col">
                     <span className="text-xs text-muted-foreground">
-                        {new Date(row.original.created_at).toLocaleDateString()}
+                        {new Date(row.original.created_at).toLocaleDateString('id-ID')}
                     </span>
                     <span className="text-sm font-semibold">{row.original.invoice_number}</span>
                 </div>
@@ -103,10 +103,10 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         },
         {
             accessorKey: 'customer_id',
-            header: 'Customer',
+            header: 'Pelanggan',
             cell: ({ row }) => (
                 <div className="flex flex-col">
-                    <span>{row.original.customer?.name || 'Walk-in Customer'}</span>
+                    <span>{row.original.customer?.name || 'Pelanggan Langsung'}</span>
                     {row.original.customer?.phone && (
                         <span className="text-xs text-muted-foreground">{row.original.customer.phone}</span>
                     )}
@@ -114,7 +114,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
             ),
         },
         {
-            header: 'Service',
+            header: 'Layanan',
             cell: ({ row }) => (
                 <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                     {row.original.carwash_type?.name}
@@ -123,7 +123,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         },
         {
             accessorKey: 'license_plate',
-            header: 'Vehicle',
+            header: 'Kendaraan',
             cell: ({ row }) =>
                 row.original.license_plate ? (
                     <span className="font-mono text-xs">{row.original.license_plate}</span>
@@ -133,7 +133,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         },
         {
             accessorKey: 'price',
-            header: () => <div className="text-right">Price</div>,
+            header: () => <div className="text-right">Harga</div>,
             cell: ({ row }) => <div className="text-right font-medium">{formatRupiah(row.original.price)}</div>,
         },
         {
@@ -147,7 +147,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         },
         {
             accessorKey: 'payment_status',
-            header: () => <div className="text-center">Payment</div>,
+            header: () => <div className="text-center">Pembayaran</div>,
             cell: ({ row }) => (
                 <div className="flex justify-center">
                     <PaymentStatusBadge status={row.original.payment_status} />
@@ -156,7 +156,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         },
         {
             id: 'actions',
-            header: 'Actions',
+            header: 'Aksi',
             cell: ({ row }) => (
                 <div className="flex items-center justify-center gap-2">
                     <TooltipProvider>
@@ -169,10 +169,10 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                                     onClick={() => setSelectedTransaction(row.original)}
                                 >
                                     <Check className="h-4 w-4" />
-                                    <span className="sr-only">Change Status</span>
+                                    <span className="sr-only">Ubah Status</span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Change Status</TooltipContent>
+                            <TooltipContent>Ubah Status</TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
 
@@ -182,11 +182,11 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                                 <Button variant="outline" size="icon" asChild className="h-8 w-8 text-muted-foreground hover:text-foreground">
                                     <Link href={`/transactions/${row.original.id}`}>
                                         <Eye className="h-4 w-4" />
-                                        <span className="sr-only">View</span>
+                                        <span className="sr-only">Lihat</span>
                                     </Link>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>View Details</TooltipContent>
+                            <TooltipContent>Lihat Detail</TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
 
@@ -200,10 +200,10 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                                     onClick={() => handleDelete(row.original)}
                                 >
                                     <Trash2 className="h-4 w-4" />
-                                    <span className="sr-only">Delete</span>
+                                    <span className="sr-only">Hapus</span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Delete Transaction</TooltipContent>
+                            <TooltipContent>Hapus Transaksi</TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                 </div>
@@ -212,16 +212,16 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
     ];
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Transactions', href: '/transactions' }]}>
-            <Head title="Transactions" />
+        <AppLayout breadcrumbs={[{ title: 'Transaksi', href: '/transactions' }]}>
+            <Head title="Transaksi" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Transactions"
-                    description="Manage and track car wash transactions."
-                    action={{ label: 'New Transaction', href: '/transactions/create' }}
+                    title="Transaksi"
+                    description="Kelola dan lacak transaksi cuci mobil."
+                    action={{ label: 'Transaksi Baru', href: '/transactions/create' }}
                 />
 
                 {/* Filters Toolbar */}
@@ -230,7 +230,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                         <div className="relative w-full md:max-w-xs">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
-                                placeholder="Search invoice, plate..."
+                                placeholder="Cari faktur, plat..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 onKeyDown={handleKeyDown}
@@ -244,15 +244,15 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                                     <div className="flex items-center gap-2 text-muted-foreground">
                                         <Filter className="h-3.5 w-3.5" />
                                         <span className="text-foreground">
-                                            {washStatus ? (washStatus === 'all' ? 'All Status' : washStatus) : 'Status'}
+                                            {washStatus ? (washStatus === 'all' ? 'Semua Status' : washStatus === 'waiting' ? 'Menunggu' : washStatus === 'washing' ? 'Dicuci' : 'Selesai') : 'Status'}
                                         </span>
                                     </div>
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All Status</SelectItem>
-                                    <SelectItem value="waiting">Waiting</SelectItem>
-                                    <SelectItem value="washing">Washing</SelectItem>
-                                    <SelectItem value="done">Done</SelectItem>
+                                    <SelectItem value="all">Semua Status</SelectItem>
+                                    <SelectItem value="waiting">Menunggu</SelectItem>
+                                    <SelectItem value="washing">Dicuci</SelectItem>
+                                    <SelectItem value="done">Selesai</SelectItem>
                                 </SelectContent>
                             </Select>
 
@@ -261,19 +261,19 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                                     <div className="flex items-center gap-2 text-muted-foreground">
                                         <CreditCard className="h-3.5 w-3.5" />
                                         <span className="text-foreground">
-                                            {paymentStatus ? (paymentStatus === 'all' ? 'All Payment' : paymentStatus) : 'Payment'}
+                                            {paymentStatus ? (paymentStatus === 'all' ? 'Semua Pembayaran' : paymentStatus === 'unpaid' ? 'Belum Bayar' : 'Lunas') : 'Pembayaran'}
                                         </span>
                                     </div>
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All Payment</SelectItem>
-                                    <SelectItem value="unpaid">Unpaid</SelectItem>
-                                    <SelectItem value="paid">Paid</SelectItem>
+                                    <SelectItem value="all">Semua Pembayaran</SelectItem>
+                                    <SelectItem value="unpaid">Belum Bayar</SelectItem>
+                                    <SelectItem value="paid">Lunas</SelectItem>
                                 </SelectContent>
                             </Select>
 
                             <Button variant="secondary" onClick={handleSearch}>
-                                Apply
+                                Terapkan
                             </Button>
                         </div>
                     </div>
@@ -293,44 +293,44 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                         <DialogHeader>
                             <DialogTitle className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5" />
-                                Update Status
+                                Perbarui Status
                             </DialogTitle>
                             <DialogDescription>
-                                Change wash or payment status for {selectedTransaction?.invoice_number}
+                                Ubah status cuci atau pembayaran untuk {selectedTransaction?.invoice_number}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Wash Status</label>
+                                <label className="text-sm font-medium">Status Cuci</label>
                                 <Select value={modalWashStatus} onValueChange={setModalWashStatus}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="waiting">Waiting</SelectItem>
-                                        <SelectItem value="washing">Washing</SelectItem>
-                                        <SelectItem value="done">Done</SelectItem>
+                                        <SelectItem value="waiting">Menunggu</SelectItem>
+                                        <SelectItem value="washing">Dicuci</SelectItem>
+                                        <SelectItem value="done">Selesai</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Payment Status</label>
+                                <label className="text-sm font-medium">Status Pembayaran</label>
                                 <Select value={modalPaymentStatus} onValueChange={setModalPaymentStatus}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="unpaid">Unpaid</SelectItem>
-                                        <SelectItem value="paid">Paid</SelectItem>
+                                        <SelectItem value="unpaid">Belum Bayar</SelectItem>
+                                        <SelectItem value="paid">Lunas</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             {modalPaymentStatus === 'paid' && (
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Payment Method</label>
+                                    <label className="text-sm font-medium">Metode Pembayaran</label>
                                     <Select value={modalPaymentMethodId} onValueChange={setModalPaymentMethodId}>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select method" />
+                                            <SelectValue placeholder="Pilih metode" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {paymentMethods.map((method) => (
@@ -345,9 +345,9 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                         </div>
                         <DialogFooter>
                             <Button variant="secondary" onClick={() => setSelectedTransaction(null)}>
-                                Cancel
+                                Batal
                             </Button>
-                            <Button onClick={handleStatusUpdate}>Save changes</Button>
+                            <Button onClick={handleStatusUpdate}>Simpan perubahan</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

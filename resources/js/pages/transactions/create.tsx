@@ -123,16 +123,16 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Transactions', href: '/transactions' },
-                { title: 'New Transaction', href: '/transactions/create' },
+                { title: 'Transaksi', href: '/transactions' },
+                { title: 'Transaksi Baru', href: '/transactions/create' },
             ]}
         >
-            <Head title="New Transaction" />
+            <Head title="Transaksi Baru" />
 
             <div className=" p-4 md:p-6">
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold tracking-tight">New Transaction</h1>
-                    <p className="text-sm text-muted-foreground">Create a new car wash transaction</p>
+                    <h1 className="text-2xl font-bold tracking-tight">Transaksi Baru</h1>
+                    <p className="text-sm text-muted-foreground">Buat transaksi cuci mobil baru</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -142,22 +142,22 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 text-primary">
                                 <Car className="h-5 w-5" />
-                                <h2 className="font-semibold">Customer & Vehicle</h2>
+                                <h2 className="font-semibold">Pelanggan & Kendaraan</h2>
                             </div>
 
                             <div className="grid gap-4">
                                 <div className="space-y-2">
-                                    <Label>Customer</Label>
+                                    <Label>Pelanggan</Label>
                                     <div className="flex gap-2">
                                         <Combobox
                                             options={customerOptions}
                                             value={data.customer_id}
                                             onValueChange={(value) => setData('customer_id', value)}
-                                            placeholder="Select customer..."
-                                            searchPlaceholder="Search customer..."
+                                            placeholder="Pilih pelanggan..."
+                                            searchPlaceholder="Cari pelanggan..."
                                             className="flex-1"
                                         />
-                                        <Button type="button" variant="outline" size="icon" asChild title="Add Customer">
+                                        <Button type="button" variant="outline" size="icon" asChild title="Tambah Pelanggan">
                                             <Link href="/customers/create?redirect=transactions">
                                                 <UserPlus className="h-4 w-4" />
                                             </Link>
@@ -166,7 +166,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>License Plate</Label>
+                                    <Label>Plat Nomor</Label>
                                     <Input
                                         value={data.license_plate}
                                         onChange={(e) => setData('license_plate', e.target.value.toUpperCase())}
@@ -181,15 +181,15 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 text-emerald-600">
                                 <Coins className="h-5 w-5" />
-                                <h2 className="font-semibold">Service & Price</h2>
+                                <h2 className="font-semibold">Layanan & Harga</h2>
                             </div>
 
                             <div className="grid gap-4">
                                 <div className="space-y-2">
-                                    <Label>Wash Type <span className="text-red-500">*</span></Label>
+                                    <Label>Jenis Cuci <span className="text-red-500">*</span></Label>
                                     <Select value={data.carwash_type_id} onValueChange={handleTypeChange}>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select type" />
+                                            <SelectValue placeholder="Pilih jenis" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {carwashTypes.map((type) => (
@@ -203,7 +203,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Price <span className="text-red-500">*</span></Label>
+                                    <Label>Harga <span className="text-red-500">*</span></Label>
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">Rp</span>
                                         <Input
@@ -219,7 +219,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                     </div>
                                     {selectedType && (
                                         <p className="text-xs text-muted-foreground">
-                                            Range: {formatRupiah(selectedType.min_price)} - {formatRupiah(selectedType.max_price)}
+                                            Rentang: {formatRupiah(selectedType.min_price)} - {formatRupiah(selectedType.max_price)}
                                         </p>
                                     )}
                                     {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
@@ -235,17 +235,17 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-purple-600">
                                 <Users className="h-5 w-5" />
-                                <h2 className="font-semibold">Staff Assignment</h2>
+                                <h2 className="font-semibold">Penugasan Staf</h2>
                             </div>
                             <div className="flex gap-2">
                                 {selectedStaffs.length > 1 && (
                                     <Button type="button" variant="ghost" size="sm" onClick={redistributeFees} className="h-8">
-                                        Split Equally
+                                        Bagi Rata
                                     </Button>
                                 )}
                                 <Button type="button" variant="outline" size="sm" onClick={addStaff} disabled={!canAddStaff} className="h-8">
                                     <Plus className="mr-2 h-3.5 w-3.5" />
-                                    Add Staff
+                                    Tambah Staf
                                 </Button>
                             </div>
                         </div>
@@ -253,7 +253,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                         {!canAddStaff && (
                             <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-2 rounded border border-amber-100 dark:bg-amber-950/30 dark:border-amber-900/50">
                                 <AlertCircle className="h-4 w-4" />
-                                Please set the price first.
+                                Silakan tentukan harga terlebih dahulu.
                             </div>
                         )}
 
@@ -269,7 +269,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                             onValueChange={(value) => updateStaffId(index, parseInt(value))}
                                         >
                                             <SelectTrigger className="h-9">
-                                                <SelectValue placeholder="Select staff..." />
+                                                <SelectValue placeholder="Pilih staf..." />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {staffs.map((staff) => (
@@ -313,7 +313,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                             {selectedStaffs.length > 0 && (
                                 <div className="flex justify-end pt-2 border-t mt-4 border-dashed">
                                     <div className="text-right">
-                                        <span className="text-sm text-muted-foreground mr-3">Total Transaction Price:</span>
+                                        <span className="text-sm text-muted-foreground mr-3">Total Harga Transaksi:</span>
                                         <span className="text-lg font-bold">{formatRupiah(price)}</span>
                                     </div>
                                 </div>
@@ -327,14 +327,14 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 text-amber-600">
                             <CreditCard className="h-5 w-5" />
-                            <h2 className="font-semibold">Payment & Notes</h2>
+                            <h2 className="font-semibold">Pembayaran & Catatan</h2>
                         </div>
 
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label>Payment Status</Label>
+                                        <Label>Status Pembayaran</Label>
                                         <Select
                                             value={data.payment_status}
                                             onValueChange={(value) => {
@@ -346,20 +346,20 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                                 <SelectValue placeholder="Status" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="unpaid">Unpaid</SelectItem>
-                                                <SelectItem value="paid">Paid</SelectItem>
+                                                <SelectItem value="unpaid">Belum Bayar</SelectItem>
+                                                <SelectItem value="paid">Lunas</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>Payment Method</Label>
+                                        <Label>Metode Pembayaran</Label>
                                         <Select
                                             value={data.payment_method_id}
                                             onValueChange={(value) => setData('payment_method_id', value)}
                                             disabled={data.payment_status !== 'paid'}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Method" />
+                                                <SelectValue placeholder="Metode" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {paymentMethods.map((method) => (
@@ -374,11 +374,11 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                             </div>
 
                             <div className="space-y-2">
-                                <Label>Notes</Label>
+                                <Label>Catatan</Label>
                                 <Textarea
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
-                                    placeholder="Optional notes..."
+                                    placeholder="Catatan opsional..."
                                     className="min-h-[80px] resize-none"
                                 />
                             </div>
@@ -387,7 +387,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
 
                     <div className="flex items-center justify-end gap-3 pt-4">
                         <Button variant="outline" type="button" asChild>
-                            <Link href="/transactions">Cancel</Link>
+                            <Link href="/transactions">Batal</Link>
                         </Button>
                         <Button
                             type="submit"
@@ -397,10 +397,10 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                             {processing ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Creating...
+                                    Membuat...
                                 </>
                             ) : (
-                                <>Create Transaction</>
+                                <>Buat Transaksi</>
                             )}
                         </Button>
                     </div>

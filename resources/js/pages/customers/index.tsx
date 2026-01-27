@@ -21,7 +21,7 @@ interface CustomersIndexProps {
 
 export default function CustomersIndex({ customers }: CustomersIndexProps) {
     const handleDelete = (customer: Customer) => {
-        if (confirm(`Are you sure you want to delete "${customer.name}"?`)) {
+        if (confirm(`Apakah Anda yakin ingin menghapus "${customer.name}"?`)) {
             router.delete(`/customers/${customer.id}`);
         }
     };
@@ -29,29 +29,29 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
     const columns: ColumnDef<Customer>[] = [
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: 'Nama',
             cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
         },
         {
             accessorKey: 'phone',
-            header: 'Phone',
+            header: 'Telepon',
             cell: ({ row }) => row.original.phone || '-',
         },
         {
             accessorKey: 'address',
-            header: 'Address',
+            header: 'Alamat',
             cell: ({ row }) => (
                 <span className="max-w-[200px] truncate block">{row.original.address || '-'}</span>
             ),
         },
         {
             accessorKey: 'transactions_count',
-            header: 'Visits',
+            header: 'Kunjungan',
             cell: ({ row }) => row.original.transactions_count || 0,
         },
         {
             accessorKey: 'total_spending',
-            header: 'Total Spending',
+            header: 'Total Pengeluaran',
             cell: ({ row }) => formatRupiah(row.original.total_spending || 0),
         },
         {
@@ -68,7 +68,7 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
                         <DropdownMenuItem asChild>
                             <Link href={`/customers/${row.original.id}/edit`}>
                                 <Pencil className="mr-2 h-4 w-4" />
-                                Edit
+                                Ubah
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -76,7 +76,7 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
                             onClick={() => handleDelete(row.original)}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Hapus
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -85,19 +85,19 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
     ];
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Customers', href: '/customers' }]}>
-            <Head title="Customers" />
+        <AppLayout breadcrumbs={[{ title: 'Pelanggan', href: '/customers' }]}>
+            <Head title="Pelanggan" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Customers"
-                    description="Manage customer data"
-                    action={{ label: 'Add Customer', href: '/customers/create' }}
+                    title="Pelanggan"
+                    description="Kelola data pelanggan"
+                    action={{ label: 'Tambah Pelanggan', href: '/customers/create' }}
                 />
 
-                <DataTable columns={columns} data={customers} searchKey="name" searchPlaceholder="Search customers..." />
+                <DataTable columns={columns} data={customers} searchKey="name" searchPlaceholder="Cari pelanggan..." />
             </div>
         </AppLayout>
     );

@@ -37,9 +37,9 @@ export function StatusBadge({ className, variant, children, ...props }: StatusBa
 // Pre-defined status mappings for common use cases
 export function WashStatusBadge({ status }: { status: 'waiting' | 'washing' | 'done' }) {
     const config = {
-        waiting: { variant: 'secondary' as const, label: 'Waiting' },
-        washing: { variant: 'warning' as const, label: 'Washing' },
-        done: { variant: 'success' as const, label: 'Done' },
+        waiting: { variant: 'secondary' as const, label: 'Menunggu' },
+        washing: { variant: 'warning' as const, label: 'Dicuci' },
+        done: { variant: 'success' as const, label: 'Selesai' },
     };
 
     const { variant, label } = config[status];
@@ -48,8 +48,8 @@ export function WashStatusBadge({ status }: { status: 'waiting' | 'washing' | 'd
 
 export function PaymentStatusBadge({ status }: { status: 'unpaid' | 'paid' }) {
     const config = {
-        unpaid: { variant: 'danger' as const, label: 'Unpaid' },
-        paid: { variant: 'success' as const, label: 'Paid' },
+        unpaid: { variant: 'danger' as const, label: 'Belum Bayar' },
+        paid: { variant: 'success' as const, label: 'Lunas' },
     };
 
     const { variant, label } = config[status];
@@ -59,15 +59,15 @@ export function PaymentStatusBadge({ status }: { status: 'unpaid' | 'paid' }) {
 export function ActiveStatusBadge({ isActive }: { isActive: boolean }) {
     return (
         <StatusBadge variant={isActive ? 'success' : 'secondary'}>
-            {isActive ? 'Active' : 'Inactive'}
+            {isActive ? 'Aktif' : 'Nonaktif'}
         </StatusBadge>
     );
 }
 
 export function RoleBadge({ role }: { role: 'owner' | 'cashier' }) {
     const config = {
-        owner: { variant: 'info' as const, label: 'Owner' },
-        cashier: { variant: 'secondary' as const, label: 'Cashier' },
+        owner: { variant: 'info' as const, label: 'Pemilik' },
+        cashier: { variant: 'secondary' as const, label: 'Kasir' },
     };
 
     const { variant, label } = config[role];

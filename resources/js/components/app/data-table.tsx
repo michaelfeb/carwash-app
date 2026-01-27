@@ -46,7 +46,7 @@ export function DataTable<TData, TValue>({
     columns,
     data,
     searchKey,
-    searchPlaceholder = 'Search...',
+    searchPlaceholder = 'Cari...',
     pageSize = 10,
     meta,
     hideSearch = false,
@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
                     {/* Only show page size selector for Client-Side pagination */}
                     {!meta && (
                         <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">Show</span>
+                            <span className="text-sm text-muted-foreground">Tampilkan</span>
                             <Select
                                 value={`${table.getState().pagination.pageSize}`}
                                 onValueChange={(value) => {
@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <span className="text-sm text-muted-foreground">entries</span>
+                            <span className="text-sm text-muted-foreground">entri</span>
                         </div>
                     )}
                 </div>
@@ -171,7 +171,7 @@ export function DataTable<TData, TValue>({
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
                                     <div className="flex flex-col items-center gap-2 text-muted-foreground">
                                         <Search className="h-8 w-8" />
-                                        <span>No results found.</span>
+                                        <span>Tidak ada hasil ditemukan.</span>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -186,7 +186,7 @@ export function DataTable<TData, TValue>({
                     // Server-side Pagination
                     <>
                         <div className="text-sm text-muted-foreground">
-                            Showing {meta.from} to {meta.to} of {meta.total} entries
+                            Menampilkan {meta.from} sampai {meta.to} dari {meta.total} entri
                         </div>
                         <div className="flex items-center gap-2">
                             <Button
@@ -207,7 +207,7 @@ export function DataTable<TData, TValue>({
                             </Button>
                             <div className="flex items-center gap-1">
                                 <span className="text-sm font-medium">
-                                    Page {meta.current_page} of {meta.last_page}
+                                    Halaman {meta.current_page} dari {meta.last_page}
                                 </span>
                             </div>
                             <Button
@@ -232,12 +232,12 @@ export function DataTable<TData, TValue>({
                     // Client-side Pagination
                     <>
                         <div className="text-sm text-muted-foreground">
-                            Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
+                            Menampilkan {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} sampai{' '}
                             {Math.min(
                                 (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
                                 table.getFilteredRowModel().rows.length,
                             )}{' '}
-                            of {table.getFilteredRowModel().rows.length} entries
+                            dari {table.getFilteredRowModel().rows.length} entri
                         </div>
                         <div className="flex items-center gap-2">
                             <Button
@@ -258,7 +258,7 @@ export function DataTable<TData, TValue>({
                             </Button>
                             <div className="flex items-center gap-1">
                                 <span className="text-sm font-medium">
-                                    Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                                    Halaman {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()}
                                 </span>
                             </div>
                             <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>

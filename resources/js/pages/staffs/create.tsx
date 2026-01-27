@@ -22,45 +22,45 @@ export default function StaffsCreate() {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Staffs', href: '/staffs' },
-                { title: 'Create', href: '/staffs/create' },
+                { title: 'Staf', href: '/staffs' },
+                { title: 'Buat', href: '/staffs/create' },
             ]}
         >
-            <Head title="Create Staff" />
+            <Head title="Buat Staf" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Create Staff</h1>
-                        <p className="text-muted-foreground">Add a new washman staff member</p>
+                        <h1 className="text-2xl font-bold tracking-tight">Buat Staf</h1>
+                        <p className="text-muted-foreground">Tambahkan anggota staf pencuci baru</p>
                     </div>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Staff Information</CardTitle>
-                        <CardDescription>Fill in the staff details</CardDescription>
+                        <CardTitle>Informasi Staf</CardTitle>
+                        <CardDescription>Isi detail staf</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Nama</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
-                                    placeholder="Enter staff name"
+                                    placeholder="Masukkan nama staf"
                                 />
                                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="phone">Phone (optional)</Label>
+                                <Label htmlFor="phone">Telepon (opsional)</Label>
                                 <Input
                                     id="phone"
                                     value={data.phone}
                                     onChange={(e) => setData('phone', e.target.value)}
-                                    placeholder="Enter phone number"
+                                    placeholder="Masukkan nomor telepon"
                                 />
                                 {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
                             </div>
@@ -71,16 +71,16 @@ export default function StaffsCreate() {
                                     checked={data.is_active}
                                     onCheckedChange={(checked) => setData('is_active', checked as boolean)}
                                 />
-                                <Label htmlFor="is_active">Active</Label>
+                                <Label htmlFor="is_active">Aktif</Label>
                             </div>
 
                             <div className="flex gap-4 pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Create Staff
+                                    Buat Staf
                                 </Button>
                                 <Button variant="outline" asChild>
-                                    <Link href="/staffs">Cancel</Link>
+                                    <Link href="/staffs">Batal</Link>
                                 </Button>
                             </div>
                         </form>

@@ -21,7 +21,7 @@ interface UsersIndexProps {
 
 export default function UsersIndex({ users }: UsersIndexProps) {
     const handleDelete = (user: User) => {
-        if (confirm(`Are you sure you want to delete "${user.name}"?`)) {
+        if (confirm(`Apakah Anda yakin ingin menghapus "${user.name}"?`)) {
             router.delete(`/users/${user.id}`);
         }
     };
@@ -29,7 +29,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
     const columns: ColumnDef<User>[] = [
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: 'Nama',
             cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
         },
         {
@@ -38,7 +38,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
         },
         {
             accessorKey: 'role',
-            header: 'Role',
+            header: 'Peran',
             cell: ({ row }) => <RoleBadge role={row.original.role} />,
         },
         {
@@ -60,7 +60,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                         <DropdownMenuItem asChild>
                             <Link href={`/users/${row.original.id}/edit`}>
                                 <Pencil className="mr-2 h-4 w-4" />
-                                Edit
+                                Ubah
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -68,7 +68,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                             onClick={() => handleDelete(row.original)}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Hapus
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -77,19 +77,19 @@ export default function UsersIndex({ users }: UsersIndexProps) {
     ];
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Users', href: '/users' }]}>
-            <Head title="Users" />
+        <AppLayout breadcrumbs={[{ title: 'Pengguna', href: '/users' }]}>
+            <Head title="Pengguna" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Users"
-                    description="Manage owner and cashier accounts"
-                    action={{ label: 'Add User', href: '/users/create' }}
+                    title="Pengguna"
+                    description="Kelola akun pemilik dan kasir"
+                    action={{ label: 'Tambah Pengguna', href: '/users/create' }}
                 />
 
-                <DataTable columns={columns} data={users} searchKey="name" searchPlaceholder="Search users..." />
+                <DataTable columns={columns} data={users} searchKey="name" searchPlaceholder="Cari pengguna..." />
             </div>
         </AppLayout>
     );

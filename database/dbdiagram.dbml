@@ -1,0 +1,128 @@
+// Carwash Application Database Schema
+// Generated from Laravel migrations
+// Use this at https://dbdiagram.io/
+
+Table users {
+  id bigint [pk, increment]
+  name varchar
+  email varchar [unique]
+  role enum('owner', 'cashier') [default: 'cashier']
+  is_active boolean [default: true]
+  email_verified_at timestamp [null]
+  password varchar
+  remember_token varchar [null]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'User accounts for the carwash system'
+}
+
+Table password_reset_tokens {
+  email varchar [pk]
+  token varchar
+  created_at timestamp [null]
+  
+  Note: 'Password reset tokens for user authentication'
+}
+
+Table sessions {
+  id varchar [pk]
+  user_id bigint [null]
+  ip_address varchar(45) [null]
+  user_agent text [null]
+  payload longtext
+  last_activity integer
+  
+  Indexes {
+    user_id
+    last_activity
+  }
+  
+  Note: 'User session management'
+}
+
+Table carwash_types {
+  id bigint [pk, increment]
+  name varchar
+  size_category varchar
+  min_price integer
+  max_price integer
+  description text [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'Types of carwash services (Small Car, Medium Car, etc.)'
+}
+
+Table staffs {
+  id bigint [pk, increment]
+  name varchar
+  phone varchar [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'Carwash staff/washmen'
+}
+
+Table customers {
+  id bigint [pk, increment]
+  name varchar
+  phone varchar [null]
+  address varchar [null]
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'Customer information'
+}
+
+Table payment_methods {
+  id bigint [pk, increment]
+  name varchar
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'Payment methods (Cash, Transfer, E-Wallet)'
+}
+
+Table transactions {
+  id bigint [pk, increment]
+  invoice_number varchar [unique]
+  customer_id bigint [null]
+  carwash_type_id bigint
+  user_id bigint
+  payment_method_id bigint [null]
+  license_plate varchar [null]
+  price integer
+  payment_status enum('unpaid', 'paid') [default: 'unpaid']
+  wash_status enum('waiting', 'washing', 'done') [default: 'waiting']
+  paid_at timestamp [null]
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'Main transaction records'
+}
+
+Table transaction_staffs {
+  id bigint [pk, increment]
+  transaction_id bigint
+  staff_id bigint
+  fee integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+  
+  Note: 'Many-to-many relationship between transactions and staffs with fee information'
+}
+
+// Relationships
+Ref: sessions.user_id > users.id [delete: set null]
+Ref: transactions.customer_id > customers.id [delete: set null]
+Ref: transactions.carwash_type_id > carwash_types.id
+Ref: transactions.user_id > users.id
+Ref: transactions.payment_method_id > payment_methods.id [delete: set null]
+Ref: transaction_staffs.transaction_id > transactions.id [delete: cascade]
+Ref: transaction_staffs.staff_id > staffs.id [delete: cascade]

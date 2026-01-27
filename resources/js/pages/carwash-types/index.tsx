@@ -22,7 +22,7 @@ interface CarwashTypesIndexProps {
 
 export default function CarwashTypesIndex({ carwashTypes }: CarwashTypesIndexProps) {
     const handleDelete = (type: CarwashType) => {
-        if (confirm(`Are you sure you want to delete "${type.name}"?`)) {
+        if (confirm(`Apakah Anda yakin ingin menghapus "${type.name}"?`)) {
             router.delete(`/carwash-types/${type.id}`);
         }
     };
@@ -30,17 +30,17 @@ export default function CarwashTypesIndex({ carwashTypes }: CarwashTypesIndexPro
     const columns: ColumnDef<CarwashType>[] = [
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: 'Nama',
             cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
         },
         {
             accessorKey: 'size_category',
-            header: 'Category',
+            header: 'Kategori',
             cell: ({ row }) => <span className="capitalize">{row.original.size_category}</span>,
         },
         {
             id: 'price_range',
-            header: 'Price Range',
+            header: 'Rentang Harga',
             cell: ({ row }) => (
                 <span>
                     {formatRupiah(row.original.min_price)} - {formatRupiah(row.original.max_price)}
@@ -49,7 +49,7 @@ export default function CarwashTypesIndex({ carwashTypes }: CarwashTypesIndexPro
         },
         {
             accessorKey: 'transactions_count',
-            header: 'Total Used',
+            header: 'Total Digunakan',
             cell: ({ row }) => row.original.transactions_count || 0,
         },
         {
@@ -71,7 +71,7 @@ export default function CarwashTypesIndex({ carwashTypes }: CarwashTypesIndexPro
                         <DropdownMenuItem asChild>
                             <Link href={`/carwash-types/${row.original.id}/edit`}>
                                 <Pencil className="mr-2 h-4 w-4" />
-                                Edit
+                                Ubah
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -79,7 +79,7 @@ export default function CarwashTypesIndex({ carwashTypes }: CarwashTypesIndexPro
                             onClick={() => handleDelete(row.original)}
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
+                            Hapus
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -88,19 +88,19 @@ export default function CarwashTypesIndex({ carwashTypes }: CarwashTypesIndexPro
     ];
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Carwash Types', href: '/carwash-types' }]}>
-            <Head title="Carwash Types" />
+        <AppLayout breadcrumbs={[{ title: 'Jenis Cuci', href: '/carwash-types' }]}>
+            <Head title="Jenis Cuci" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
                 <PageHeader
-                    title="Carwash Types"
-                    description="Manage car wash types and pricing"
-                    action={{ label: 'Add Type', href: '/carwash-types/create' }}
+                    title="Jenis Cuci"
+                    description="Kelola jenis cuci mobil dan harga"
+                    action={{ label: 'Tambah Jenis', href: '/carwash-types/create' }}
                 />
 
-                <DataTable columns={columns} data={carwashTypes} searchKey="name" searchPlaceholder="Search types..." />
+                <DataTable columns={columns} data={carwashTypes} searchKey="name" searchPlaceholder="Cari jenis..." />
             </div>
         </AppLayout>
     );

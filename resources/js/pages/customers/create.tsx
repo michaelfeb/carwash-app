@@ -31,20 +31,20 @@ export default function CustomersCreate({ redirectTo }: CustomersCreateProps) {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Customers', href: '/customers' },
-                { title: 'Create', href: '/customers/create' },
+                { title: 'Pelanggan', href: '/customers' },
+                { title: 'Buat', href: '/customers/create' },
             ]}
         >
-            <Head title="Create Customer" />
+            <Head title="Buat Pelanggan" />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Create Customer</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Buat Pelanggan</h1>
                         <p className="text-muted-foreground">
                             {isFromTransaction
-                                ? 'Add a new customer, then return to transaction'
-                                : 'Add a new customer'}
+                                ? 'Tambahkan pelanggan baru, lalu kembali ke transaksi'
+                                : 'Tambahkan pelanggan baru'}
                         </p>
                     </div>
                 </div>
@@ -52,61 +52,61 @@ export default function CustomersCreate({ redirectTo }: CustomersCreateProps) {
                 {isFromTransaction && (
                     <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-blue-800 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-200">
                         <p className="text-sm">
-                            You'll be redirected back to the transaction form after creating this customer.
+                            Anda akan diarahkan kembali ke formulir transaksi setelah membuat pelanggan ini.
                         </p>
                     </div>
                 )}
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Customer Information</CardTitle>
-                        <CardDescription>Fill in the customer details</CardDescription>
+                        <CardTitle>Informasi Pelanggan</CardTitle>
+                        <CardDescription>Isi detail pelanggan</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name">Name <span className="text-red-500">*</span></Label>
+                                    <Label htmlFor="name">Nama <span className="text-red-500">*</span></Label>
                                     <Input
                                         id="name"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Enter customer name"
+                                        placeholder="Masukkan nama pelanggan"
                                     />
                                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="phone">Phone</Label>
+                                    <Label htmlFor="phone">Telepon</Label>
                                     <Input
                                         id="phone"
                                         value={data.phone}
                                         onChange={(e) => setData('phone', e.target.value)}
-                                        placeholder="Enter phone number"
+                                        placeholder="Masukkan nomor telepon"
                                     />
                                     {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="address">Address</Label>
+                                <Label htmlFor="address">Alamat</Label>
                                 <Textarea
                                     id="address"
                                     value={data.address}
                                     onChange={(e) => setData('address', e.target.value)}
-                                    placeholder="Enter address"
+                                    placeholder="Masukkan alamat"
                                     rows={2}
                                 />
                                 {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="notes">Notes</Label>
+                                <Label htmlFor="notes">Catatan</Label>
                                 <Textarea
                                     id="notes"
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
-                                    placeholder="Any additional notes"
+                                    placeholder="Catatan tambahan"
                                     rows={2}
                                 />
                                 {errors.notes && <p className="text-sm text-red-500">{errors.notes}</p>}
@@ -115,10 +115,10 @@ export default function CustomersCreate({ redirectTo }: CustomersCreateProps) {
                             <div className="flex gap-4 pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    {isFromTransaction ? 'Create & Return' : 'Create Customer'}
+                                    {isFromTransaction ? 'Buat & Kembali' : 'Buat Pelanggan'}
                                 </Button>
                                 <Button variant="outline" asChild>
-                                    <Link href={backLink}>Cancel</Link>
+                                    <Link href={backLink}>Batal</Link>
                                 </Button>
                             </div>
                         </form>
