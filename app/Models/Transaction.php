@@ -11,6 +11,10 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    // Share percentages
+    public const OWNER_SHARE_PERCENT = 0.60;  // 60% untuk owner
+    public const STAFF_POOL_PERCENT = 0.40;   // 40% untuk pool staff
+
     protected $fillable = [
         'invoice_number',
         'customer_id',
@@ -19,6 +23,8 @@ class Transaction extends Model
         'payment_method_id',
         'license_plate',
         'price',
+        'owner_share',
+        'staff_pool',
         'payment_status',
         'wash_status',
         'paid_at',
@@ -29,7 +35,20 @@ class Transaction extends Model
     {
         return [
             'price' => 'integer',
+            'owner_share' => 'integer',
+            'staff_pool' => 'integer',
             'paid_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * Calculate shares from price
+     */
+    public static function calculateShares(int $price): array
+    {
+        return [
+            'owner_share' => (int) floor($price * self::OWNER_SHARE_PERCENT),
+            'staff_pool' => (int) floor($price * self::STAFF_POOL_PERCENT),
         ];
     }
 
@@ -71,7 +90,6 @@ class Transaction extends Model
     public function staffs(): BelongsToMany
     {
         return $this->belongsToMany(Staff::class, 'transaction_staffs')
-            ->withPivot('fee')
             ->withTimestamps();
     }
 
@@ -104,6 +122,22 @@ class Transaction extends Model
     }
 
     /**
+     * Get formatted owner share
+     */
+    public function getFormattedOwnerShareAttribute(): string
+    {
+        return 'Rp ' . number_format($this->owner_share, 0, ',', '.');
+    }
+
+    /**
+     * Get formatted staff pool
+     */
+    public function getFormattedStaffPoolAttribute(): string
+    {
+        return 'Rp ' . number_format($this->staff_pool, 0, ',', '.');
+    }
+
+    /**
      * Check if transaction is paid
      */
     public function isPaid(): bool
@@ -117,13 +151,5 @@ class Transaction extends Model
     public function isDone(): bool
     {
         return $this->wash_status === 'done';
-    }
-
-    /**
-     * Get total staff fees
-     */
-    public function getTotalStaffFeesAttribute(): int
-    {
-        return $this->staffs->sum('pivot.fee');
     }
 }

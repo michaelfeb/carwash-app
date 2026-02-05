@@ -126,35 +126,59 @@ class ReportController extends Controller
 
     /**
      * Export staff performance report.
+     * Uses 60/40 share mechanism with equal distribution among working staff.
      */
     public function staffExport(Request $request): HttpResponse
     {
         $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
         $dateTo = $request->input('date_to', now()->format('Y-m-d'));
 
-        $staffs = Staff::with([
-            'transactions' => function ($query) use ($dateFrom, $dateTo) {
-                $query->whereBetween('transactions.created_at', [$dateFrom, $dateTo]);
-            }
-        ])->get()->map(function ($staff) use ($dateFrom, $dateTo) {
-            $transactions = $staff->transactions()
-                ->whereBetween('transactions.created_at', [$dateFrom, $dateTo])
-                ->get();
+        // Get all paid transactions in the period (using whereDate for proper date comparison)
+        $transactions = Transaction::with('staffs')
+            ->whereDate('created_at', '>=', $dateFrom)
+            ->whereDate('created_at', '<=', $dateTo)
+            ->where('payment_status', 'paid')
+            ->get();
 
-            $staff->transaction_count = $transactions->count();
-            $staff->total_fees = $transactions->sum('pivot.fee');
-            return $staff;
-        });
+        // Calculate total staff pool (40% of all paid transactions)
+        $totalStaffPool = $transactions->sum('staff_pool');
+        $totalTransactions = $transactions->count();
 
-        $totalFees = $staffs->sum('total_fees');
-        $totalTransactions = $staffs->sum('transaction_count');
+        // Get unique staff IDs who worked on transactions in the period
+        $workingStaffIds = $transactions->flatMap(function ($transaction) {
+            return $transaction->staffs->pluck('id');
+        })->unique()->values();
+
+        $workingStaffCount = $workingStaffIds->count();
+
+        // Calculate equal share per staff
+        $equalShare = $workingStaffCount > 0 ? (int) floor($totalStaffPool / $workingStaffCount) : 0;
+
+        // Get staff data with their transaction counts
+        $staffs = Staff::whereIn('id', $workingStaffIds)
+            ->get()
+            ->map(function ($staff) use ($transactions, $equalShare) {
+                // Count transactions this staff worked on
+                $staffTransactions = $transactions->filter(function ($transaction) use ($staff) {
+                    return $transaction->staffs->contains('id', $staff->id);
+                });
+
+                $staff->transaction_count = $staffTransactions->count();
+                $staff->share_amount = $equalShare; // Equal share for all working staff
+                return $staff;
+            });
+
+        $totalShareAmount = $workingStaffCount * $equalShare;
 
         $pdf = Pdf::loadView('reports.staff', [
             'staffs' => $staffs,
             'dateFrom' => Carbon::parse($dateFrom),
             'dateTo' => Carbon::parse($dateTo),
-            'totalFees' => $totalFees,
+            'totalStaffPool' => $totalStaffPool,
+            'totalShareAmount' => $totalShareAmount,
             'totalTransactions' => $totalTransactions,
+            'workingStaffCount' => $workingStaffCount,
+            'equalShare' => $equalShare,
         ]);
 
         return $pdf->download("staff-performance-{$dateFrom}-to-{$dateTo}.pdf");

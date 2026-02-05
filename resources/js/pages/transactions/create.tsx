@@ -1,4 +1,4 @@
-import { formatMoneyInput, formatRupiah, parseMoneyInput } from '@/components/app/stats-card';
+import { formatRupiah } from '@/components/app/stats-card';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type CarwashType, type Customer, type PaymentMethod, type Staff } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { AlertCircle, Car, Coins, CreditCard, Loader2, Plus, Trash2, UserPlus, Users } from 'lucide-react';
+import { Car, Coins, CreditCard, Info, Loader2, Plus, Trash2, UserPlus, Users } from 'lucide-react';
 import * as React from 'react';
 
 interface TransactionsCreateProps {
@@ -19,14 +19,12 @@ interface TransactionsCreateProps {
     staffs: Staff[];
 }
 
-interface StaffAssignment {
-    id: number;
-    name: string;
-    fee: string;
-}
+// Share percentages
+const OWNER_SHARE_PERCENT = 0.6;
+const STAFF_POOL_PERCENT = 0.4;
 
 export default function TransactionsCreate({ customers, carwashTypes, paymentMethods, staffs }: TransactionsCreateProps) {
-    const [selectedStaffs, setSelectedStaffs] = React.useState<StaffAssignment[]>([]);
+    const [selectedStaffs, setSelectedStaffs] = React.useState<number[]>([]);
     const [selectedType, setSelectedType] = React.useState<CarwashType | null>(null);
 
     const { data, setData, post, processing, errors } = useForm({
@@ -37,11 +35,12 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
         price: '',
         payment_status: 'unpaid',
         notes: '',
-        staffs: [] as { id: number; fee: number }[],
+        staffs: [] as number[],
     });
 
     const price = parseInt(data.price) || 0;
-    const canAddStaff = price > 0;
+    const ownerShare = Math.floor(price * OWNER_SHARE_PERCENT);
+    const staffPool = Math.floor(price * STAFF_POOL_PERCENT);
 
     // Customer options for combobox
     const customerOptions = customers.map((customer) => ({
@@ -59,55 +58,22 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
         }
     };
 
-    // Recalculate equal fees
-    const recalculateEqualFees = (staffCount: number, totalPrice: number) => {
-        if (staffCount === 0 || totalPrice <= 0) return '0';
-        return String(Math.floor(totalPrice / staffCount));
-    };
-
     const addStaff = () => {
-        if (!canAddStaff) return;
-
-        const availableStaffs = staffs.filter((s) => !selectedStaffs.find((ss) => ss.id === s.id));
+        const availableStaffs = staffs.filter((s) => !selectedStaffs.includes(s.id));
         if (availableStaffs.length > 0) {
             const staff = availableStaffs[0];
-            const newStaffCount = selectedStaffs.length + 1;
-            const equalFee = recalculateEqualFees(newStaffCount, price);
-
-            const updatedStaffs = selectedStaffs.map((s) => ({ ...s, fee: equalFee }));
-            setSelectedStaffs([...updatedStaffs, { id: staff.id, name: staff.name, fee: equalFee }]);
+            setSelectedStaffs([...selectedStaffs, staff.id]);
         }
     };
 
     const removeStaff = (index: number) => {
-        const remaining = selectedStaffs.filter((_, i) => i !== index);
-        if (remaining.length > 0) {
-            const equalFee = recalculateEqualFees(remaining.length, price);
-            setSelectedStaffs(remaining.map((s) => ({ ...s, fee: equalFee })));
-        } else {
-            setSelectedStaffs([]);
-        }
+        setSelectedStaffs(selectedStaffs.filter((_, i) => i !== index));
     };
 
     const updateStaffId = (index: number, staffId: number) => {
-        const staff = staffs.find((s) => s.id === staffId);
-        if (staff) {
-            const updated = [...selectedStaffs];
-            updated[index] = { ...updated[index], id: staffId, name: staff.name };
-            setSelectedStaffs(updated);
-        }
-    };
-
-    const updateStaffFee = (index: number, fee: string) => {
         const updated = [...selectedStaffs];
-        updated[index] = { ...updated[index], fee };
+        updated[index] = staffId;
         setSelectedStaffs(updated);
-    };
-
-    const redistributeFees = () => {
-        if (selectedStaffs.length === 0 || price <= 0) return;
-        const equalFee = recalculateEqualFees(selectedStaffs.length, price);
-        setSelectedStaffs(selectedStaffs.map((s) => ({ ...s, fee: equalFee })));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -116,8 +82,7 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
     };
 
     React.useEffect(() => {
-        const staffsData = selectedStaffs.map((s) => ({ id: s.id, fee: parseInt(s.fee) || 0 }));
-        setData('staffs', staffsData);
+        setData('staffs', selectedStaffs);
     }, [selectedStaffs]);
 
     return (
@@ -207,12 +172,9 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">Rp</span>
                                         <Input
-                                            type="text"
-                                            value={formatMoneyInput(data.price)}
-                                            onChange={(e) => {
-                                                const numericValue = parseMoneyInput(e.target.value);
-                                                setData('price', String(numericValue));
-                                            }}
+                                            type="number"
+                                            value={data.price}
+                                            onChange={(e) => setData('price', e.target.value)}
                                             placeholder="0"
                                             className="pl-9 font-medium"
                                         />
@@ -228,6 +190,27 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                         </div>
                     </div>
 
+                    {/* Share Distribution Info */}
+                    {price > 0 && (
+                        <div className="rounded-lg border bg-muted/30 p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                                <Info className="h-4 w-4 text-blue-500" />
+                                <span className="text-sm font-medium">Pembagian Hasil (Otomatis)</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="rounded-md bg-background p-3 border">
+                                    <p className="text-xs text-muted-foreground mb-1">Owner (60%)</p>
+                                    <p className="text-lg font-bold text-emerald-600">{formatRupiah(ownerShare)}</p>
+                                </div>
+                                <div className="rounded-md bg-background p-3 border">
+                                    <p className="text-xs text-muted-foreground mb-1">Pool Staff (40%)</p>
+                                    <p className="text-lg font-bold text-purple-600">{formatRupiah(staffPool)}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Dibagi rata mingguan</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <Separator />
 
                     {/* Staff Assignment */}
@@ -237,35 +220,32 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                 <Users className="h-5 w-5" />
                                 <h2 className="font-semibold">Penugasan Staf</h2>
                             </div>
-                            <div className="flex gap-2">
-                                {selectedStaffs.length > 1 && (
-                                    <Button type="button" variant="ghost" size="sm" onClick={redistributeFees} className="h-8">
-                                        Bagi Rata
-                                    </Button>
-                                )}
-                                <Button type="button" variant="outline" size="sm" onClick={addStaff} disabled={!canAddStaff} className="h-8">
-                                    <Plus className="mr-2 h-3.5 w-3.5" />
-                                    Tambah Staf
-                                </Button>
-                            </div>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={addStaff}
+                                disabled={staffs.filter(s => !selectedStaffs.includes(s.id)).length === 0}
+                                className="h-8"
+                            >
+                                <Plus className="mr-2 h-3.5 w-3.5" />
+                                Tambah Staf
+                            </Button>
                         </div>
 
-                        {!canAddStaff && (
-                            <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-2 rounded border border-amber-100 dark:bg-amber-950/30 dark:border-amber-900/50">
-                                <AlertCircle className="h-4 w-4" />
-                                Silakan tentukan harga terlebih dahulu.
-                            </div>
-                        )}
+                        <p className="text-sm text-muted-foreground">
+                            Pilih staf yang mengerjakan transaksi ini. Pembagian pool 40% akan dihitung otomatis setiap akhir minggu.
+                        </p>
 
                         <div className="space-y-3">
-                            {selectedStaffs.map((assignment, index) => (
+                            {selectedStaffs.map((staffId, index) => (
                                 <div key={index} className="flex items-center gap-3">
                                     <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
                                         {index + 1}
                                     </div>
                                     <div className="flex-1">
                                         <Select
-                                            value={String(assignment.id)}
+                                            value={String(staffId)}
                                             onValueChange={(value) => updateStaffId(index, parseInt(value))}
                                         >
                                             <SelectTrigger className="h-9">
@@ -276,27 +256,13 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                                     <SelectItem
                                                         key={staff.id}
                                                         value={String(staff.id)}
-                                                        disabled={selectedStaffs.some((s, i) => s.id === staff.id && i !== index)}
+                                                        disabled={selectedStaffs.some((id, i) => id === staff.id && i !== index)}
                                                     >
                                                         {staff.name}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                    </div>
-                                    <div className="w-32">
-                                        <div className="relative">
-                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">Rp</span>
-                                            <Input
-                                                type="text"
-                                                value={formatMoneyInput(assignment.fee)}
-                                                onChange={(e) => {
-                                                    const numericValue = parseMoneyInput(e.target.value);
-                                                    updateStaffFee(index, String(numericValue));
-                                                }}
-                                                className="h-9 pl-8 text-right font-mono"
-                                            />
-                                        </div>
                                     </div>
                                     <Button
                                         type="button"
@@ -310,15 +276,15 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                 </div>
                             ))}
 
-                            {selectedStaffs.length > 0 && (
-                                <div className="flex justify-end pt-2 border-t mt-4 border-dashed">
-                                    <div className="text-right">
-                                        <span className="text-sm text-muted-foreground mr-3">Total Harga Transaksi:</span>
-                                        <span className="text-lg font-bold">{formatRupiah(price)}</span>
-                                    </div>
+                            {selectedStaffs.length === 0 && (
+                                <div className="text-center py-6 text-muted-foreground border border-dashed rounded-lg">
+                                    <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                                    <p className="text-sm">Belum ada staf yang ditugaskan</p>
+                                    <p className="text-xs">Klik "Tambah Staf" untuk menugaskan</p>
                                 </div>
                             )}
                         </div>
+                        {errors.staffs && <p className="text-sm text-red-500">{errors.staffs}</p>}
                     </div>
 
                     <Separator />

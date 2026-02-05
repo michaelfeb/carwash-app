@@ -89,11 +89,13 @@ class TransactionController extends Controller
             'payment_status' => ['required', 'in:unpaid,paid'],
             'notes' => ['nullable', 'string'],
             'staffs' => ['required', 'array', 'min:1'],
-            'staffs.*.id' => ['required', 'exists:staffs,id'],
-            'staffs.*.fee' => ['required', 'integer', 'min:0'],
+            'staffs.*' => ['required', 'exists:staffs,id'],
         ]);
 
         DB::transaction(function () use ($validated, $request) {
+            // Calculate 60/40 shares
+            $shares = Transaction::calculateShares($validated['price']);
+
             // Create transaction
             $transaction = Transaction::create([
                 'invoice_number' => Transaction::generateInvoiceNumber(),
@@ -103,16 +105,16 @@ class TransactionController extends Controller
                 'payment_method_id' => $validated['payment_method_id'],
                 'license_plate' => $validated['license_plate'],
                 'price' => $validated['price'],
+                'owner_share' => $shares['owner_share'],
+                'staff_pool' => $shares['staff_pool'],
                 'payment_status' => $validated['payment_status'],
                 'wash_status' => 'washing',
                 'paid_at' => $validated['payment_status'] === 'paid' ? now() : null,
                 'notes' => $validated['notes'],
             ]);
 
-            // Attach staffs with fees
-            foreach ($validated['staffs'] as $staff) {
-                $transaction->staffs()->attach($staff['id'], ['fee' => $staff['fee']]);
-            }
+            // Attach staffs (without individual fees - will be calculated weekly)
+            $transaction->staffs()->attach($validated['staffs']);
         });
 
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');

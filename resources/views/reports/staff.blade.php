@@ -30,6 +30,19 @@
             color: #666;
         }
 
+        .info-box {
+            background: #e8f4fd;
+            border: 1px solid #bee5ff;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .info-box strong {
+            color: #0066cc;
+        }
+
         .summary {
             background: #f5f5f5;
             padding: 10px;
@@ -37,19 +50,38 @@
             border-radius: 4px;
         }
 
+        .summary-grid {
+            display: table;
+            width: 100%;
+        }
+
         .summary-item {
-            display: inline-block;
-            margin-right: 30px;
+            display: table-cell;
+            padding: 5px 10px;
+            text-align: center;
+            border-right: 1px solid #ddd;
+        }
+
+        .summary-item:last-child {
+            border-right: none;
         }
 
         .summary-label {
+            font-size: 10px;
             font-weight: bold;
             color: #666;
+            display: block;
+            margin-bottom: 3px;
         }
 
         .summary-value {
-            font-size: 16px;
+            font-size: 14px;
             color: #333;
+            font-weight: bold;
+        }
+
+        .summary-value.highlight {
+            color: #7c3aed;
         }
 
         table {
@@ -94,6 +126,14 @@
             font-weight: bold;
             background-color: #e5e7eb !important;
         }
+
+        .share-badge {
+            background: #f3e8ff;
+            color: #7c3aed;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -103,14 +143,30 @@
         <p>Periode: {{ $dateFrom->format('d M Y') }} - {{ $dateTo->format('d M Y') }}</p>
     </div>
 
+    <div class="info-box">
+        <strong>📊 Mekanisme Pembagian 60/40:</strong>
+        Dari setiap transaksi, 60% untuk Owner dan 40% masuk Pool Staff.
+        Pool Staff dibagi <strong>rata</strong> ke semua staff yang bekerja dalam periode ini.
+    </div>
+
     <div class="summary">
-        <div class="summary-item">
-            <span class="summary-label">Total Transaksi:</span>
-            <span class="summary-value">{{ $totalTransactions }}</span>
-        </div>
-        <div class="summary-item">
-            <span class="summary-label">Total Fee Staff:</span>
-            <span class="summary-value">Rp {{ number_format($totalFees, 0, ',', '.') }}</span>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="summary-label">Total Transaksi</span>
+                <span class="summary-value">{{ $totalTransactions }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Total Pool Staff (40%)</span>
+                <span class="summary-value highlight">Rp {{ number_format($totalStaffPool, 0, ',', '.') }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Staff Bekerja</span>
+                <span class="summary-value">{{ $workingStaffCount }} orang</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Bagian per Staff</span>
+                <span class="summary-value highlight">Rp {{ number_format($equalShare, 0, ',', '.') }}</span>
+            </div>
         </div>
     </div>
 
@@ -120,8 +176,8 @@
                 <th>No</th>
                 <th>Nama Staff</th>
                 <th>No. Telepon</th>
-                <th class="text-center">Jumlah Transaksi</th>
-                <th class="text-right">Total Fee</th>
+                <th class="text-center">Transaksi Dikerjakan</th>
+                <th class="text-right">Bagian (Dibagi Rata)</th>
             </tr>
         </thead>
         <tbody>
@@ -131,18 +187,19 @@
                     <td>{{ $staff->name }}</td>
                     <td>{{ $staff->phone ?? '-' }}</td>
                     <td class="text-center">{{ $staff->transaction_count }}</td>
-                    <td class="text-right">Rp {{ number_format($staff->total_fees, 0, ',', '.') }}</td>
+                    <td class="text-right"><span class="share-badge">Rp
+                            {{ number_format($staff->share_amount, 0, ',', '.') }}</span></td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center">Tidak ada data</td>
+                    <td colspan="5" class="text-center">Tidak ada data staff yang bekerja dalam periode ini</td>
                 </tr>
             @endforelse
             @if($staffs->count() > 0)
                 <tr class="total-row">
                     <td colspan="3">TOTAL</td>
                     <td class="text-center">{{ $totalTransactions }}</td>
-                    <td class="text-right">Rp {{ number_format($totalFees, 0, ',', '.') }}</td>
+                    <td class="text-right">Rp {{ number_format($totalShareAmount, 0, ',', '.') }}</td>
                 </tr>
             @endif
         </tbody>
@@ -150,6 +207,9 @@
 
     <div class="footer">
         <p>Dicetak pada: {{ now()->format('d M Y H:i:s') }}</p>
+        <p style="margin-top: 5px; font-style: italic;">
+            * Pembagian dihitung dari total Pool Staff (40%) dibagi rata ke {{ $workingStaffCount }} staff
+        </p>
     </div>
 </body>
 

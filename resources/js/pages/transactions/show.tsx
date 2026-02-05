@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { type PaymentMethod, type Transaction } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Car, CreditCard, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Car, PieChart, User, Users } from 'lucide-react';
 import * as React from 'react';
 
 interface TransactionsShowProps {
@@ -29,8 +29,6 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
             payment_method_id: paymentMethodId || undefined,
         });
     };
-
-    const totalStaffFees = transaction.staffs?.reduce((sum, staff) => sum + (staff.pivot?.fee || 0), 0) || 0;
 
     return (
         <AppLayout
@@ -85,7 +83,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                             </div>
                             <Separator />
                             <div className="flex items-center justify-between">
-                                <span className="text-lg font-medium">Harga</span>
+                                <span className="text-lg font-medium">Harga Total</span>
                                 <span className="text-2xl font-bold text-primary">{formatRupiah(transaction.price)}</span>
                             </div>
                         </CardContent>
@@ -127,35 +125,73 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                     </Card>
                 </div>
 
+                {/* Share Distribution */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <PieChart className="h-5 w-5" />
+                            Pembagian Hasil
+                        </CardTitle>
+                        <CardDescription>Pembagian otomatis 60% Owner - 40% Pool Staff</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div className="rounded-lg border p-4 bg-muted/30">
+                                <p className="text-sm text-muted-foreground mb-1">Harga Transaksi</p>
+                                <p className="text-xl font-bold">{formatRupiah(transaction.price)}</p>
+                            </div>
+                            <div className="rounded-lg border p-4 bg-emerald-50 dark:bg-emerald-950/30">
+                                <p className="text-sm text-emerald-600 dark:text-emerald-400 mb-1">Bagian Owner (60%)</p>
+                                <p className="text-xl font-bold text-emerald-700 dark:text-emerald-300">
+                                    {formatRupiah(transaction.owner_share || 0)}
+                                </p>
+                            </div>
+                            <div className="rounded-lg border p-4 bg-purple-50 dark:bg-purple-950/30">
+                                <p className="text-sm text-purple-600 dark:text-purple-400 mb-1">Pool Staff (40%)</p>
+                                <p className="text-xl font-bold text-purple-700 dark:text-purple-300">
+                                    {formatRupiah(transaction.staff_pool || 0)}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">Dibagi rata mingguan</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
                 {/* Staff Assignments */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Staf Ditugaskan</CardTitle>
-                        <CardDescription>Pencuci yang ditugaskan untuk transaksi ini</CardDescription>
+                        <CardTitle className="flex items-center gap-2">
+                            <Users className="h-5 w-5" />
+                            Staf Ditugaskan
+                        </CardTitle>
+                        <CardDescription>
+                            Staf yang mengerjakan transaksi ini akan mendapat bagian dari pool 40% di akhir minggu
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>No</TableHead>
                                     <TableHead>Nama</TableHead>
                                     <TableHead>Telepon</TableHead>
-                                    <TableHead className="text-right">Upah</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {transaction.staffs?.map((staff) => (
+                                {transaction.staffs?.map((staff, index) => (
                                     <TableRow key={staff.id}>
+                                        <TableCell className="font-medium">{index + 1}</TableCell>
                                         <TableCell className="font-medium">{staff.name}</TableCell>
                                         <TableCell>{staff.phone || '-'}</TableCell>
-                                        <TableCell className="text-right">{formatRupiah(staff.pivot?.fee || 0)}</TableCell>
                                     </TableRow>
                                 ))}
-                                <TableRow className="bg-muted/50">
-                                    <TableCell colSpan={2} className="font-medium">
-                                        Total Upah Staf
-                                    </TableCell>
-                                    <TableCell className="text-right font-bold">{formatRupiah(totalStaffFees)}</TableCell>
-                                </TableRow>
+                                {(!transaction.staffs || transaction.staffs.length === 0) && (
+                                    <TableRow>
+                                        <TableCell colSpan={3} className="text-center text-muted-foreground">
+                                            Tidak ada staf yang ditugaskan
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </CardContent>

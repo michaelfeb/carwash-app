@@ -93,7 +93,6 @@ export interface PaymentMethod {
 export interface TransactionStaff {
     id: number;
     staff_id: number;
-    fee: number;
     staff?: Staff;
 }
 
@@ -106,6 +105,8 @@ export interface Transaction {
     payment_method_id: number | null;
     license_plate: string | null;
     price: number;
+    owner_share: number;      // 60% of price
+    staff_pool: number;       // 40% of price
     payment_status: 'unpaid' | 'paid';
     wash_status: 'waiting' | 'washing' | 'done';
     paid_at: string | null;
@@ -116,7 +117,23 @@ export interface Transaction {
     carwash_type?: CarwashType;
     user?: User;
     payment_method?: PaymentMethod;
-    staffs?: (Staff & { pivot: { fee: number } })[];
+    staffs?: Staff[];
+}
+
+export interface WeeklyStaffEarning {
+    id: number;
+    staff_id: number;
+    week_start: string;
+    week_end: string;
+    total_pool: number;
+    staff_count: number;
+    earning: number;
+    transaction_count: number;
+    is_paid: boolean;
+    paid_at: string | null;
+    created_at: string;
+    updated_at: string;
+    staff?: Staff;
 }
 
 // Pagination
