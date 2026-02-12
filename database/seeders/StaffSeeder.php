@@ -13,12 +13,11 @@ class StaffSeeder extends Seeder
     public function run(): void
     {
         $staffs = [
-            ['name' => 'Staff 1', 'phone' => '081234567891', 'is_active' => true],
-            ['name' => 'Staff 2', 'phone' => '081234567892', 'is_active' => true],
-            ['name' => 'Staff 3', 'phone' => '081234567893', 'is_active' => true],
-            ['name' => 'Staff 4', 'phone' => '081234567894', 'is_active' => true],
-            ['name' => 'Staff 5', 'phone' => '081234567895', 'is_active' => true],
-            ['name' => 'Staff 6', 'phone' => '081234567896', 'is_active' => true],
+            ['name' => 'Adwa', 'phone' => '081234567801', 'is_active' => true],
+            ['name' => 'Ipit', 'phone' => '082345678902', 'is_active' => true],
+            ['name' => 'Ali', 'phone' => '083456789103', 'is_active' => true],
+            ['name' => 'Anto', 'phone' => '084567891204', 'is_active' => true],
+            ['name' => 'Teguh', 'phone' => '085678912305', 'is_active' => true],
         ];
 
         foreach ($staffs as $staff) {

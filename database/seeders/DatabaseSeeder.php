@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             CarwashTypeSeeder::class,
             PaymentMethodSeeder::class,
             StaffSeeder::class,
+            CustomerSeeder::class,
+            TransactionSeeder::class,
         ]);
     }
 }
