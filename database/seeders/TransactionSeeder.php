@@ -32,6 +32,12 @@ class TransactionSeeder extends Seeder
         $endDate = Carbon::create(2026, 2, 14);
 
         $invoiceCounter = 1;
+        $specialCarCount = 0;
+        $maxSpecialCar = 10;
+
+        // Get the special carwash type
+        $specialType = $carwashTypes->firstWhere('size_category', 'special');
+        $nonSpecialTypes = $carwashTypes->where('size_category', '!=', 'special');
 
         // Generate 10 transactions per day
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
@@ -41,8 +47,15 @@ class TransactionSeeder extends Seeder
                 $minute = rand(0, 59);
                 $transactionTime = $date->copy()->setTime($hour, $minute);
 
-                // Random carwash type
-                $carwashType = $carwashTypes->random();
+                // Random carwash type (limit special car to max 10 total)
+                if ($specialCarCount < $maxSpecialCar) {
+                    $carwashType = $carwashTypes->random();
+                    if ($carwashType->size_category === 'special') {
+                        $specialCarCount++;
+                    }
+                } else {
+                    $carwashType = $nonSpecialTypes->random();
+                }
 
                 // Random price within the range
                 $price = rand($carwashType->min_price, $carwashType->max_price);
