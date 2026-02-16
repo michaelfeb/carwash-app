@@ -146,7 +146,7 @@
     <div class="info-box">
         <strong>📊 Mekanisme Pembagian 60/40:</strong>
         Dari setiap transaksi, 60% untuk Owner dan 40% masuk Pool Staff.
-        Pool Staff dibagi <strong>rata</strong> ke semua staff yang bekerja dalam periode ini.
+        Pool Staff dibagi <strong>proporsional</strong> sesuai jumlah transaksi yang dikerjakan setiap staff.
     </div>
 
     <div class="summary">
@@ -164,8 +164,8 @@
                 <span class="summary-value">{{ $workingStaffCount }} orang</span>
             </div>
             <div class="summary-item">
-                <span class="summary-label">Bagian per Staff</span>
-                <span class="summary-value highlight">Rp {{ number_format($equalShare, 0, ',', '.') }}</span>
+                <span class="summary-label">Total Partisipasi</span>
+                <span class="summary-value highlight">{{ $totalTransactionParticipation }} transaksi</span>
             </div>
         </div>
     </div>
@@ -176,8 +176,9 @@
                 <th>No</th>
                 <th>Nama Staff</th>
                 <th>No. Telepon</th>
-                <th class="text-center">Transaksi Dikerjakan</th>
-                <th class="text-right">Bagian (Dibagi Rata)</th>
+                <th class="text-center">Transaksi</th>
+                <th class="text-center">Persentase</th>
+                <th class="text-right">Bagian (Proporsional)</th>
             </tr>
         </thead>
         <tbody>
@@ -187,18 +188,20 @@
                     <td>{{ $staff->name }}</td>
                     <td>{{ $staff->phone ?? '-' }}</td>
                     <td class="text-center">{{ $staff->transaction_count }}</td>
+                    <td class="text-center">{{ $staff->share_percentage }}%</td>
                     <td class="text-right"><span class="share-badge">Rp
                             {{ number_format($staff->share_amount, 0, ',', '.') }}</span></td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center">Tidak ada data staff yang bekerja dalam periode ini</td>
+                    <td colspan="6" class="text-center">Tidak ada data staff yang bekerja dalam periode ini</td>
                 </tr>
             @endforelse
             @if($staffs->count() > 0)
                 <tr class="total-row">
                     <td colspan="3">TOTAL</td>
-                    <td class="text-center">{{ $totalTransactions }}</td>
+                    <td class="text-center">{{ $totalTransactionParticipation }}</td>
+                    <td class="text-center">100%</td>
                     <td class="text-right">Rp {{ number_format($totalShareAmount, 0, ',', '.') }}</td>
                 </tr>
             @endif
@@ -208,7 +211,7 @@
     <div class="footer">
         <p>Dicetak pada: {{ now()->format('d M Y H:i:s') }}</p>
         <p style="margin-top: 5px; font-style: italic;">
-            * Pembagian dihitung dari total Pool Staff (40%) dibagi rata ke {{ $workingStaffCount }} staff
+            * Pembagian dihitung proporsional: (Transaksi Staff / Total Partisipasi) × Pool Staff (40%)
         </p>
     </div>
 </body>

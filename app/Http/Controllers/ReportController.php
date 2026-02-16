@@ -126,7 +126,7 @@ class ReportController extends Controller
 
     /**
      * Export staff performance report.
-     * Uses 60/40 share mechanism with equal distribution among working staff.
+     * Uses 60/40 share mechanism with proportional distribution based on transaction count.
      */
     public function staffExport(Request $request): HttpResponse
     {
@@ -151,24 +151,41 @@ class ReportController extends Controller
 
         $workingStaffCount = $workingStaffIds->count();
 
-        // Calculate equal share per staff
-        $equalShare = $workingStaffCount > 0 ? (int) floor($totalStaffPool / $workingStaffCount) : 0;
-
         // Get staff data with their transaction counts
         $staffs = Staff::whereIn('id', $workingStaffIds)
             ->get()
-            ->map(function ($staff) use ($transactions, $equalShare) {
+            ->map(function ($staff) use ($transactions) {
                 // Count transactions this staff worked on
                 $staffTransactions = $transactions->filter(function ($transaction) use ($staff) {
                     return $transaction->staffs->contains('id', $staff->id);
                 });
 
                 $staff->transaction_count = $staffTransactions->count();
-                $staff->share_amount = $equalShare; // Equal share for all working staff
                 return $staff;
             });
 
-        $totalShareAmount = $workingStaffCount * $equalShare;
+        // Calculate total transaction participation (sum of all staff transaction counts)
+        $totalTransactionParticipation = $staffs->sum('transaction_count');
+
+        // Calculate proportional share for each staff
+        $staffs = $staffs->map(function ($staff) use ($totalStaffPool, $totalTransactionParticipation) {
+            if ($totalTransactionParticipation > 0) {
+                // Share = (staff's transaction count / total participation) * total pool
+                $staff->share_amount = (int) floor(
+                    ($staff->transaction_count / $totalTransactionParticipation) * $totalStaffPool
+                );
+                $staff->share_percentage = round(
+                    ($staff->transaction_count / $totalTransactionParticipation) * 100,
+                    2
+                );
+            } else {
+                $staff->share_amount = 0;
+                $staff->share_percentage = 0;
+            }
+            return $staff;
+        });
+
+        $totalShareAmount = $staffs->sum('share_amount');
 
         $pdf = Pdf::loadView('reports.staff', [
             'staffs' => $staffs,
@@ -178,7 +195,7 @@ class ReportController extends Controller
             'totalShareAmount' => $totalShareAmount,
             'totalTransactions' => $totalTransactions,
             'workingStaffCount' => $workingStaffCount,
-            'equalShare' => $equalShare,
+            'totalTransactionParticipation' => $totalTransactionParticipation,
         ]);
 
         return $pdf->download("staff-performance-{$dateFrom}-to-{$dateTo}.pdf");
