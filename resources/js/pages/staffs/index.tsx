@@ -44,9 +44,9 @@ export default function StaffsIndex({ staffs }: StaffsIndexProps) {
             cell: ({ row }) => row.original.transactions_count || 0,
         },
         {
-            accessorKey: 'total_earnings',
+            accessorKey: 'transaction_earnings',
             header: 'Total Pendapatan',
-            cell: ({ row }) => formatRupiah(row.original.total_earnings || 0),
+            cell: ({ row }) => formatRupiah(row.original.transaction_earnings || 0),
         },
         {
             accessorKey: 'is_active',

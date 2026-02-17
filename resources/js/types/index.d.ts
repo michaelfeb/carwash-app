@@ -65,6 +65,7 @@ export interface Staff {
     is_active: boolean;
     transactions_count?: number;
     total_earnings?: number;
+    transaction_earnings?: number;
     created_at: string;
     updated_at: string;
 }

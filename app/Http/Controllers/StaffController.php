@@ -16,12 +16,11 @@ class StaffController extends Controller
     public function index(): Response
     {
         $staffs = Staff::withCount('transactions')
-            ->orderBy('name')
-            ->get()
-            ->map(function ($staff) {
-                $staff->total_earnings = $staff->transactions()->sum('transaction_staffs.fee');
-                return $staff;
-            });
+            ->leftJoin('transaction_staffs', 'staffs.id', '=', 'transaction_staffs.staff_id')
+            ->selectRaw('staffs.*, COALESCE(SUM(transaction_staffs.fee), 0) as transaction_earnings')
+            ->groupBy('staffs.id')
+            ->orderBy('staffs.name')
+            ->get();
 
         return Inertia::render('staffs/index', [
             'staffs' => $staffs,
