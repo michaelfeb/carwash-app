@@ -22,11 +22,6 @@ const sidebarNavItems: NavItem[] = [
         icon: null,
     },
     {
-        title: 'Autentikasi 2-Faktor',
-        href: show(),
-        icon: null,
-    },
-    {
         title: 'Tampilan',
         href: editAppearance(),
         icon: null,
