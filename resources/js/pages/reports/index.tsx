@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import { BarChart, Calendar, Car, Download, TrendingUp, Users } from 'lucide-react';
+import { BarChart, BarChart3, Calendar, Car, CreditCard, Crown, Download, TrendingUp, Users } from 'lucide-react';
 import * as React from 'react';
 
 export default function ReportsIndex() {
@@ -22,6 +22,12 @@ export default function ReportsIndex() {
     const [staffDateTo, setStaffDateTo] = React.useState(today);
     const [trendDateFrom, setTrendDateFrom] = React.useState(thirtyDaysAgo);
     const [trendDateTo, setTrendDateTo] = React.useState(today);
+    const [paymentMethodDateFrom, setPaymentMethodDateFrom] = React.useState(thirtyDaysAgo);
+    const [paymentMethodDateTo, setPaymentMethodDateTo] = React.useState(today);
+    const [topCustomerDateFrom, setTopCustomerDateFrom] = React.useState(thirtyDaysAgo);
+    const [topCustomerDateTo, setTopCustomerDateTo] = React.useState(today);
+    const [distDateFrom, setDistDateFrom] = React.useState(thirtyDaysAgo);
+    const [distDateTo, setDistDateTo] = React.useState(today);
 
     const handleDownload = (url: string) => {
         window.open(url, '_blank');
@@ -211,6 +217,126 @@ export default function ReportsIndex() {
                             <Button
                                 className="w-full"
                                 onClick={() => handleDownload(`/reports/income-trend/export?date_from=${trendDateFrom}&date_to=${trendDateTo}`)}
+                            >
+                                <Download className="mr-2 h-4 w-4" />
+                                Ekspor PDF
+                            </Button>
+                        </CardContent>
+                    </Card>
+
+                    {/* Payment Method Report */}
+                    <Card className="flex flex-col">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <CreditCard className="h-5 w-5 text-primary" />
+                                Laporan Metode Pembayaran
+                            </CardTitle>
+                            <CardDescription>Analisis penggunaan metode pembayaran</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1 space-y-4">
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="payment-method-from">Dari</Label>
+                                    <Input
+                                        id="payment-method-from"
+                                        type="date"
+                                        value={paymentMethodDateFrom}
+                                        onChange={(e) => setPaymentMethodDateFrom(e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="payment-method-to">Sampai</Label>
+                                    <Input
+                                        id="payment-method-to"
+                                        type="date"
+                                        value={paymentMethodDateTo}
+                                        onChange={(e) => setPaymentMethodDateTo(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <Button
+                                className="w-full"
+                                onClick={() => handleDownload(`/reports/payment-method/export?date_from=${paymentMethodDateFrom}&date_to=${paymentMethodDateTo}`)}
+                            >
+                                <Download className="mr-2 h-4 w-4" />
+                                Ekspor PDF
+                            </Button>
+                        </CardContent>
+                    </Card>
+
+                    {/* Top Customer Report */}
+                    <Card className="flex flex-col">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Crown className="h-5 w-5 text-primary" />
+                                Laporan Top Customer
+                            </CardTitle>
+                            <CardDescription>Pelanggan dengan transaksi dan belanja tertinggi</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1 space-y-4">
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="top-customer-from">Dari</Label>
+                                    <Input
+                                        id="top-customer-from"
+                                        type="date"
+                                        value={topCustomerDateFrom}
+                                        onChange={(e) => setTopCustomerDateFrom(e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="top-customer-to">Sampai</Label>
+                                    <Input
+                                        id="top-customer-to"
+                                        type="date"
+                                        value={topCustomerDateTo}
+                                        onChange={(e) => setTopCustomerDateTo(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <Button
+                                className="w-full"
+                                onClick={() => handleDownload(`/reports/top-customer/export?date_from=${topCustomerDateFrom}&date_to=${topCustomerDateTo}`)}
+                            >
+                                <Download className="mr-2 h-4 w-4" />
+                                Ekspor PDF
+                            </Button>
+                        </CardContent>
+                    </Card>
+
+                    {/* Transaction Distribution Report */}
+                    <Card className="flex flex-col">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <BarChart3 className="h-5 w-5 text-primary" />
+                                Distribusi Transaksi
+                            </CardTitle>
+                            <CardDescription>Distribusi transaksi harian dalam periode tertentu</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1 space-y-4">
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="dist-from">Dari</Label>
+                                    <Input
+                                        id="dist-from"
+                                        type="date"
+                                        value={distDateFrom}
+                                        onChange={(e) => setDistDateFrom(e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="dist-to">Sampai</Label>
+                                    <Input
+                                        id="dist-to"
+                                        type="date"
+                                        value={distDateTo}
+                                        onChange={(e) => setDistDateTo(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <Button
+                                className="w-full"
+                                onClick={() => handleDownload(`/reports/transaction-distribution/export?date_from=${distDateFrom}&date_to=${distDateTo}`)}
                             >
                                 <Download className="mr-2 h-4 w-4" />
                                 Ekspor PDF

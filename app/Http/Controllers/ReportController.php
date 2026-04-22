@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CarwashType;
+use App\Models\Customer;
+use App\Models\PaymentMethod;
 use App\Models\Staff;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -236,5 +238,139 @@ class ReportController extends Controller
         ]);
 
         return $pdf->download("income-trend-{$dateFrom}-to-{$dateTo}.pdf");
+    }
+
+    /**
+     * Export payment method report.
+     */
+    public function paymentMethodExport(Request $request): HttpResponse
+    {
+        $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
+        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+
+        $paymentMethods = PaymentMethod::withCount([
+            'transactions' => function ($query) use ($dateFrom, $dateTo) {
+                $query->whereDate('created_at', '>=', $dateFrom)
+                    ->whereDate('created_at', '<=', $dateTo)
+                    ->where('payment_status', 'paid');
+            }
+        ])->get()->map(function ($method) use ($dateFrom, $dateTo) {
+            $method->revenue = $method->transactions()
+                ->whereDate('created_at', '>=', $dateFrom)
+                ->whereDate('created_at', '<=', $dateTo)
+                ->where('payment_status', 'paid')
+                ->sum('price');
+            return $method;
+        });
+
+        $totalTransactions = $paymentMethods->sum('transactions_count');
+        $totalRevenue = $paymentMethods->sum('revenue');
+
+        // Calculate percentage
+        $paymentMethods = $paymentMethods->map(function ($method) use ($totalTransactions) {
+            $method->percentage = $totalTransactions > 0
+                ? round(($method->transactions_count / $totalTransactions) * 100, 1)
+                : 0;
+            return $method;
+        });
+
+        $pdf = Pdf::loadView('reports.payment-method', [
+            'paymentMethods' => $paymentMethods,
+            'dateFrom' => Carbon::parse($dateFrom),
+            'dateTo' => Carbon::parse($dateTo),
+            'totalTransactions' => $totalTransactions,
+            'totalRevenue' => $totalRevenue,
+        ]);
+
+        return $pdf->download("payment-method-report-{$dateFrom}-to-{$dateTo}.pdf");
+    }
+
+    /**
+     * Export top customer report.
+     */
+    public function topCustomerExport(Request $request): HttpResponse
+    {
+        $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
+        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+
+        $customers = Customer::withCount([
+            'transactions' => function ($query) use ($dateFrom, $dateTo) {
+                $query->whereDate('created_at', '>=', $dateFrom)
+                    ->whereDate('created_at', '<=', $dateTo)
+                    ->where('payment_status', 'paid');
+            }
+        ])->get()->map(function ($customer) use ($dateFrom, $dateTo) {
+            $customer->total_spending = $customer->transactions()
+                ->whereDate('created_at', '>=', $dateFrom)
+                ->whereDate('created_at', '<=', $dateTo)
+                ->where('payment_status', 'paid')
+                ->sum('price');
+
+            $lastTransaction = $customer->transactions()
+                ->whereDate('created_at', '>=', $dateFrom)
+                ->whereDate('created_at', '<=', $dateTo)
+                ->where('payment_status', 'paid')
+                ->latest('created_at')
+                ->first();
+
+            $customer->last_transaction_date = $lastTransaction?->created_at;
+
+            return $customer;
+        })->filter(function ($customer) {
+            return $customer->transactions_count > 0;
+        })->sortByDesc('total_spending')->values();
+
+        $totalCustomers = $customers->count();
+        $totalRevenue = $customers->sum('total_spending');
+
+        $pdf = Pdf::loadView('reports.top-customer', [
+            'customers' => $customers,
+            'dateFrom' => Carbon::parse($dateFrom),
+            'dateTo' => Carbon::parse($dateTo),
+            'totalCustomers' => $totalCustomers,
+            'totalRevenue' => $totalRevenue,
+        ]);
+
+        return $pdf->download("top-customer-report-{$dateFrom}-to-{$dateTo}.pdf");
+    }
+
+    /**
+     * Export transaction distribution report.
+     */
+    public function transactionDistributionExport(Request $request): HttpResponse
+    {
+        $dateFrom = $request->input('date_from', now()->subDays(30)->format('Y-m-d'));
+        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+
+        $transactions = Transaction::where('payment_status', 'paid')
+            ->whereDate('created_at', '>=', $dateFrom)
+            ->whereDate('created_at', '<=', $dateTo)
+            ->get();
+
+        // Group by date
+        $dailyData = $transactions->groupBy(function ($item) {
+            return $item->created_at->format('Y-m-d');
+        })->map(function ($items, $date) {
+            return [
+                'date' => $date,
+                'count' => $items->count(),
+                'revenue' => $items->sum('price'),
+            ];
+        })->sortKeys()->values();
+
+        $totalTransactions = $transactions->count();
+        $totalRevenue = $transactions->sum('price');
+        $averageDaily = $dailyData->count() > 0 ? $totalRevenue / $dailyData->count() : 0;
+
+        $pdf = Pdf::loadView('reports.transaction-distribution', [
+            'dailyData' => $dailyData,
+            'dateFrom' => Carbon::parse($dateFrom),
+            'dateTo' => Carbon::parse($dateTo),
+            'totalTransactions' => $totalTransactions,
+            'totalRevenue' => $totalRevenue,
+            'averageDaily' => $averageDaily,
+        ]);
+
+        return $pdf->download("transaction-distribution-{$dateFrom}-to-{$dateTo}.pdf");
     }
 }

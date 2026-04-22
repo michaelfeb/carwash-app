@@ -37,6 +37,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/car-type/export', [ReportController::class, 'carTypeExport'])->name('car-type.export');
         Route::get('/staff/export', [ReportController::class, 'staffExport'])->name('staff.export');
         Route::get('/income-trend/export', [ReportController::class, 'incomeTrendExport'])->name('income-trend.export');
+        Route::get('/payment-method/export', [ReportController::class, 'paymentMethodExport'])->name('payment-method.export');
+        Route::get('/top-customer/export', [ReportController::class, 'topCustomerExport'])->name('top-customer.export');
+        Route::get('/transaction-distribution/export', [ReportController::class, 'transactionDistributionExport'])->name('transaction-distribution.export');
     });
 
     // Owner-only routes
