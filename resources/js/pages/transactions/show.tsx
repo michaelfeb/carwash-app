@@ -84,7 +84,19 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                             <Separator />
                             <div className="flex items-center justify-between">
                                 <span className="text-lg font-medium">Harga Total</span>
-                                <span className="text-2xl font-bold text-primary">{formatRupiah(transaction.price)}</span>
+                                <div className="flex flex-col items-end gap-1">
+                                    {transaction.loyalty_discount_applied && transaction.original_price && (
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                                Diskon 25%
+                                            </span>
+                                            <span className="text-sm text-muted-foreground line-through">
+                                                {formatRupiah(transaction.original_price)}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <span className="text-2xl font-bold text-primary">{formatRupiah(transaction.price)}</span>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -136,6 +148,22 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {transaction.loyalty_discount_applied && transaction.original_price && (
+                                <div className="col-span-2 md:col-span-3 rounded-lg border p-4 bg-amber-50/50">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="inline-flex items-center rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                                Diskon Loyalty 25%
+                                            </span>
+                                            <span className="text-sm text-muted-foreground">Harga asli</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm text-muted-foreground line-through">{formatRupiah(transaction.original_price)}</span>
+                                            <span className="text-sm font-medium text-emerald-600">-{formatRupiah(transaction.original_price - transaction.price)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="rounded-lg border p-4 bg-muted/30">
                                 <p className="text-sm text-muted-foreground mb-1">Harga Transaksi</p>
                                 <p className="text-xl font-bold">{formatRupiah(transaction.price)}</p>

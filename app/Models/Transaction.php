@@ -15,6 +15,10 @@ class Transaction extends Model
     public const OWNER_SHARE_PERCENT = 0.60;  // 60% untuk owner
     public const STAFF_POOL_PERCENT = 0.40;   // 40% untuk pool staff
 
+    // Loyalty program constants
+    public const LOYALTY_STAMP_THRESHOLD = 4;    // 4 stamps needed to unlock discount
+    public const LOYALTY_DISCOUNT_PERCENT = 0.25; // 25% discount on 5th visit
+
     protected $fillable = [
         'invoice_number',
         'customer_id',
@@ -29,6 +33,10 @@ class Transaction extends Model
         'wash_status',
         'paid_at',
         'notes',
+        'queue_number',
+        'slot',
+        'loyalty_discount_applied',
+        'original_price',
     ];
 
     protected function casts(): array
@@ -36,7 +44,10 @@ class Transaction extends Model
         return [
             'price' => 'integer',
             'owner_share' => 'integer',
+            'loyalty_discount_applied' => 'boolean',
+            'original_price' => 'integer',
             'staff_pool' => 'integer',
+            'queue_number' => 'integer',
             'paid_at' => 'datetime',
         ];
     }
@@ -151,5 +162,72 @@ class Transaction extends Model
     public function isDone(): bool
     {
         return $this->wash_status === 'done';
+    }
+
+    /**
+     * Get the discount amount applied (original_price - price)
+     */
+    public function getDiscountAmountAttribute(): int
+    {
+        if ($this->loyalty_discount_applied && $this->original_price) {
+            return $this->original_price - $this->price;
+        }
+        return 0;
+    }
+
+    /**
+     * Get formatted discount amount
+     */
+    public function getFormattedDiscountAmountAttribute(): string
+    {
+        return 'Rp ' . number_format($this->discount_amount, 0, ',', '.');
+    }
+
+    /**
+     * Get formatted original price
+     */
+    public function getFormattedOriginalPriceAttribute(): string
+    {
+        if ($this->original_price) {
+            return 'Rp ' . number_format($this->original_price, 0, ',', '.');
+        }
+        return $this->formatted_price;
+    }
+
+    /**
+     * Generate daily auto-increment queue number.
+     */
+    public static function generateQueueNumber(): int
+    {
+        $last = static::whereDate('created_at', today())
+            ->whereNotNull('queue_number')
+            ->max('queue_number');
+
+        return ($last ?? 0) + 1;
+    }
+
+    /**
+     * Check if the transaction is currently in the queue.
+     */
+    public function isQueued(): bool
+    {
+        return $this->queue_number !== null;
+    }
+
+    /**
+     * Check if the transaction is assigned to a wash bay.
+     */
+    public function isAssignedToSlot(): bool
+    {
+        return $this->slot !== null;
+    }
+
+    /**
+     * Scope a query to only include queued (not done) transactions.
+     */
+    public function scopeQueued(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->whereNotNull('queue_number')
+            ->where('wash_status', '!=', 'done');
     }
 }

@@ -76,6 +76,13 @@ export interface Customer {
     phone: string | null;
     address: string | null;
     notes: string | null;
+    loyalty_stamps: number;
+    loyalty_progress?: {
+        current: number;
+        target: number;
+        next_visit_discount: boolean;
+        discount_percent: number;
+    };
     transactions_count?: number;
     total_spending?: number;
     created_at: string;
@@ -107,11 +114,15 @@ export interface Transaction {
     license_plate: string | null;
     price: number;
     owner_share: number;      // 60% of price
+    loyalty_discount_applied: boolean;
+    original_price?: number | null;
     staff_pool: number;       // 40% of price
     payment_status: 'unpaid' | 'paid';
     wash_status: 'waiting' | 'washing' | 'done';
     paid_at: string | null;
     notes: string | null;
+    queue_number?: number | null;
+    slot?: string | null;
     created_at: string;
     updated_at: string;
     customer?: Customer;

@@ -139,7 +139,21 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         {
             accessorKey: 'price',
             header: () => <div className="text-right">Harga</div>,
-            cell: ({ row }) => <div className="text-right font-medium">{formatRupiah(row.original.price)}</div>,
+            cell: ({ row }) => (
+                <div className="flex flex-col items-end gap-0.5">
+                    {row.original.loyalty_discount_applied && row.original.original_price && (
+                        <span className="text-xs text-muted-foreground line-through">
+                            {formatRupiah(row.original.original_price)}
+                        </span>
+                    )}
+                    <span className="font-medium">{formatRupiah(row.original.price)}</span>
+                    {row.original.loyalty_discount_applied && (
+                        <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                            Diskon 25%
+                        </span>
+                    )}
+                </div>
+            ),
         },
         {
             accessorKey: 'wash_status',

@@ -4,6 +4,7 @@ use App\Http\Controllers\CarwashTypeController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\QueueController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TransactionController;
@@ -21,6 +22,11 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Queue (accessible by all authenticated users)
+    Route::get('/queue', [QueueController::class, 'index'])->name('queue.index');
+    Route::put('/queue/{transaction}/assign', [QueueController::class, 'assign'])->name('queue.assign');
+    Route::put('/queue/{transaction}/release', [QueueController::class, 'release'])->name('queue.release');
 
     // Transactions (accessible by all authenticated users)
     Route::resource('transactions', TransactionController::class)->except(['edit', 'update']);

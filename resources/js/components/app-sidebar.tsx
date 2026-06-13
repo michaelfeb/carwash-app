@@ -18,6 +18,7 @@ import {
     CreditCard,
     FileText,
     LayoutGrid,
+    ListOrdered,
     Settings,
     UserCircle,
     Users,
@@ -35,6 +36,11 @@ export function AppSidebar() {
             title: 'Dasbor',
             href: '/dashboard',
             icon: LayoutGrid,
+        },
+        {
+            title: 'Antrian',
+            href: '/queue',
+            icon: ListOrdered,
         },
         {
             title: 'Transaksi',

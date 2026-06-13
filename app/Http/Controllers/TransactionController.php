@@ -71,11 +71,27 @@ class TransactionController extends Controller
      */
     public function create(): Response
     {
+        $customers = Customer::orderBy('name')->get()->map(function ($customer) {
+            return [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'address' => $customer->address,
+                'notes' => $customer->notes,
+                'loyalty_stamps' => $customer->loyalty_stamps,
+                'loyalty_progress' => $customer->getLoyaltyProgress(),
+            ];
+        });
+
         return Inertia::render('transactions/create', [
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => $customers,
             'carwashTypes' => CarwashType::where('is_active', true)->orderBy('name')->get(),
             'paymentMethods' => PaymentMethod::where('is_active', true)->orderBy('name')->get(),
             'staffs' => Staff::where('is_active', true)->orderBy('name')->get(),
+            'loyaltyConfig' => [
+                'stamp_threshold' => Transaction::LOYALTY_STAMP_THRESHOLD,
+                'discount_percent' => (int) (Transaction::LOYALTY_DISCOUNT_PERCENT * 100),
+            ],
         ]);
     }
 
@@ -97,8 +113,30 @@ class TransactionController extends Controller
         ]);
 
         DB::transaction(function () use ($validated, $request) {
-            // Calculate 60/40 shares
-            $shares = Transaction::calculateShares($validated['price']);
+            $price = $validated['price'];
+            $originalPrice = null;
+            $loyaltyDiscountApplied = false;
+            $customer = null;
+
+            // Handle loyalty discount for registered customers
+            if ($validated['customer_id']) {
+                $customer = Customer::find($validated['customer_id']);
+
+                if ($customer && $customer->isEligibleForDiscount()) {
+                    // Apply 25% loyalty discount
+                    $originalPrice = $price;
+                    $price = (int) floor($price * (1 - Transaction::LOYALTY_DISCOUNT_PERCENT));
+                    $loyaltyDiscountApplied = true;
+                    // Reset stamps
+                    $customer->update(['loyalty_stamps' => 0]);
+                } elseif ($customer) {
+                    // Increment stamp
+                    $customer->increment('loyalty_stamps');
+                }
+            }
+
+            // Calculate 60/40 shares from the FINAL price (after discount)
+            $shares = Transaction::calculateShares($price);
 
             // Create transaction
             $transaction = Transaction::create([
@@ -108,13 +146,16 @@ class TransactionController extends Controller
                 'user_id' => auth()->id(),
                 'payment_method_id' => $validated['payment_method_id'],
                 'license_plate' => $validated['license_plate'],
-                'price' => $validated['price'],
+                'price' => $price,
+                'original_price' => $originalPrice,
                 'owner_share' => $shares['owner_share'],
                 'staff_pool' => $shares['staff_pool'],
                 'payment_status' => $validated['payment_status'],
                 'wash_status' => 'washing',
                 'paid_at' => $validated['payment_status'] === 'paid' ? now() : null,
                 'notes' => $validated['notes'],
+                'queue_number' => Transaction::generateQueueNumber(),
+                'loyalty_discount_applied' => $loyaltyDiscountApplied,
             ]);
 
             // Attach staffs (without individual fees - will be calculated weekly)
@@ -150,6 +191,12 @@ class TransactionController extends Controller
 
         if (isset($validated['wash_status'])) {
             $transaction->wash_status = $validated['wash_status'];
+
+            // Clear queue data when wash is marked done
+            if ($validated['wash_status'] === 'done') {
+                $transaction->queue_number = null;
+                $transaction->slot = null;
+            }
         }
 
         if (isset($validated['payment_status'])) {

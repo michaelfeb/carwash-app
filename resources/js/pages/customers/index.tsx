@@ -9,11 +9,12 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import { type Customer } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, Sparkles, Trash2 } from 'lucide-react';
 
 interface CustomersIndexProps {
     customers: Customer[];
@@ -53,6 +54,46 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
             accessorKey: 'total_spending',
             header: 'Total Pengeluaran',
             cell: ({ row }) => formatRupiah(row.original.total_spending || 0),
+        },
+        {
+            accessorKey: 'loyalty_stamps',
+            header: 'Loyalty',
+            cell: ({ row }) => {
+                const stamps = row.original.loyalty_stamps || 0;
+                const threshold = 4;
+                const isEligible = stamps >= threshold;
+                return (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div className="flex items-center gap-1">
+                                    {Array.from({ length: threshold }).map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className={`h-2.5 w-2.5 rounded-full ${
+                                                i < stamps ? 'bg-amber-500' : 'bg-gray-200'
+                                            }`}
+                                        />
+                                    ))}
+                                    <div
+                                        className={`ml-0.5 h-2.5 w-2.5 rounded-full ${
+                                            isEligible ? 'bg-emerald-500' : 'bg-gray-200'
+                                        }`}
+                                    />
+                                    {isEligible && (
+                                        <Sparkles className="ml-1 h-3.5 w-3.5 text-emerald-500" />
+                                    )}
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                {isEligible
+                                    ? 'Diskon 25% untuk kunjungan berikutnya!'
+                                    : `${stamps}/${threshold} stempel — ${threshold - stamps} lagi untuk diskon`}
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                );
+            },
         },
         {
             id: 'actions',
