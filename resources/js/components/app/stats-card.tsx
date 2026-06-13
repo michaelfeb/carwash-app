@@ -14,22 +14,40 @@ interface StatsCardProps {
         isPositive: boolean;
     };
     className?: string;
+    accentColor?: 'blue' | 'indigo' | 'sky' | 'violet' | 'cyan' | 'emerald';
 }
 
-export function StatsCard({ title, value, description, icon: Icon, trend, className }: StatsCardProps) {
+const accentMap: Record<NonNullable<StatsCardProps['accentColor']>, { bubble: string; icon: string; border: string }> = {
+    blue:    { bubble: 'bg-blue-100',   icon: 'text-blue-600',   border: 'border-t-blue-500' },
+    indigo:  { bubble: 'bg-indigo-100', icon: 'text-indigo-600', border: 'border-t-indigo-500' },
+    sky:     { bubble: 'bg-sky-100',    icon: 'text-sky-600',    border: 'border-t-sky-500' },
+    violet:  { bubble: 'bg-violet-100', icon: 'text-violet-600', border: 'border-t-violet-500' },
+    cyan:    { bubble: 'bg-cyan-100',   icon: 'text-cyan-600',   border: 'border-t-cyan-500' },
+    emerald: { bubble: 'bg-emerald-100',icon: 'text-emerald-600',border: 'border-t-emerald-500' },
+};
+
+export function StatsCard({ title, value, description, icon: Icon, trend, className, accentColor = 'blue' }: StatsCardProps) {
+    const accent = accentMap[accentColor];
     return (
-        <Card className={cn('transition-shadow hover:shadow-md', className)}>
+        <Card className={cn(
+            'border-t-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5',
+            accent.border,
+            className,
+        )}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-                {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
+                {Icon && (
+                    <div className={cn('flex h-9 w-9 items-center justify-center rounded-full', accent.bubble)}>
+                        <Icon className={cn('h-5 w-5', accent.icon)} />
+                    </div>
+                )}
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-                {description && <p className="text-xs text-muted-foreground">{description}</p>}
+                <div className="text-2xl font-bold text-foreground">{value}</div>
+                {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
                 {trend && (
-                    <p className={cn('mt-1 text-xs', trend.isPositive ? 'text-emerald-600' : 'text-red-600')}>
-                        {trend.isPositive ? '+' : '-'}
-                        {Math.abs(trend.value)}% from last period
+                    <p className={cn('mt-1 text-xs font-medium', trend.isPositive ? 'text-emerald-600' : 'text-red-500')}>
+                        {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}% dari periode lalu
                     </p>
                 )}
             </CardContent>

@@ -170,6 +170,17 @@ export interface DashboardStats {
     activeStaff: number;
 }
 
+export interface RevenueChartData {
+    date: string;     // "2026-05-01"
+    revenue: number;  // total paid revenue for that day
+    count: number;    // number of transactions
+}
+
+export interface ServiceChartData {
+    name: string;   // e.g. "Cuci Reguler"
+    total: number;  // transaction count
+}
+
 // Flash Messages
 export interface FlashMessages {
     success?: string;

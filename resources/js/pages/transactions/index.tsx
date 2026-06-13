@@ -28,9 +28,12 @@ interface TransactionsIndexProps {
 }
 
 export default function TransactionsIndex({ transactions, paymentMethods, filters }: TransactionsIndexProps) {
+    const todayStr = new Date().toISOString().split('T')[0];
     const [search, setSearch] = React.useState(filters.search || '');
     const [washStatus, setWashStatus] = React.useState(filters.wash_status || '');
     const [paymentStatus, setPaymentStatus] = React.useState(filters.payment_status || '');
+    const [dateFrom, setDateFrom] = React.useState(filters.date_from || todayStr);
+    const [dateTo, setDateTo] = React.useState(filters.date_to || todayStr);
 
     // Modal State
     const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction | null>(null);
@@ -54,6 +57,8 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                 search,
                 wash_status: washStatus || undefined,
                 payment_status: paymentStatus || undefined,
+                date_from: dateFrom || undefined,
+                date_to: dateTo || undefined,
             },
             { preserveState: true }
         );
@@ -239,6 +244,26 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                         </div>
 
                         <div className="flex gap-2">
+                            <div className="relative">
+                                <Calendar className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={(e) => setDateFrom(e.target.value)}
+                                    className="w-[160px] pl-8 text-xs"
+                                />
+                            </div>
+                            <span className="flex items-center text-xs text-muted-foreground">s/d</span>
+                            <div className="relative">
+                                <Calendar className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={(e) => setDateTo(e.target.value)}
+                                    className="w-[160px] pl-8 text-xs"
+                                />
+                            </div>
+
                             <Select value={washStatus} onValueChange={setWashStatus}>
                                 <SelectTrigger className="w-[140px]">
                                     <div className="flex items-center gap-2 text-muted-foreground">

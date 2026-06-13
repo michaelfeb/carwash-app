@@ -33,13 +33,11 @@ class TransactionController extends Controller
             $query->where('payment_status', $request->payment_status);
         }
 
-        // Filter by date range
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
+        // Filter by date range — default to today if not provided
+        $dateFrom = $request->filled('date_from') ? $request->date_from : now()->toDateString();
+        $dateTo   = $request->filled('date_to')   ? $request->date_to   : now()->toDateString();
+        $query->whereDate('created_at', '>=', $dateFrom)
+            ->whereDate('created_at', '<=', $dateTo);
 
         // Search by invoice number or license plate
         if ($request->filled('search')) {
@@ -57,7 +55,13 @@ class TransactionController extends Controller
 
         return Inertia::render('transactions/index', [
             'transactions' => $transactions,
-            'filters' => $request->only(['wash_status', 'payment_status', 'date_from', 'date_to', 'search']),
+            'filters' => [
+                'wash_status'    => $request->wash_status,
+                'payment_status' => $request->payment_status,
+                'date_from'      => $dateFrom,
+                'date_to'        => $dateTo,
+                'search'         => $request->search,
+            ],
             'paymentMethods' => PaymentMethod::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
