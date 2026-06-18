@@ -151,7 +151,7 @@ class TransactionController extends Controller
                 'owner_share' => $shares['owner_share'],
                 'staff_pool' => $shares['staff_pool'],
                 'payment_status' => $validated['payment_status'],
-                'wash_status' => 'washing',
+                'wash_status' => 'waiting',
                 'paid_at' => $validated['payment_status'] === 'paid' ? now() : null,
                 'notes' => $validated['notes'],
                 'queue_number' => Transaction::generateQueueNumber(),

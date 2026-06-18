@@ -22,12 +22,15 @@ class QueueController extends Controller
     /**
      * Display the queue management screen.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $date = $request->filled('date') ? $request->date : now()->toDateString();
+
         // Fetch active slots (cars currently assigned to each bay and not yet done)
         $activeSlots = [];
         foreach (self::BAYS as $bay) {
             $activeSlots[$bay['key']] = Transaction::with(['customer', 'carwashType', 'staffs'])
+                ->whereDate('created_at', $date)
                 ->where('slot', $bay['key'])
                 ->where('wash_status', '!=', 'done')
                 ->first();
@@ -35,6 +38,7 @@ class QueueController extends Controller
 
         // Fetch waiting list (queued, not assigned to any slot, not done)
         $waitingList = Transaction::with(['customer', 'carwashType', 'staffs'])
+            ->whereDate('created_at', $date)
             ->whereNotNull('queue_number')
             ->whereNull('slot')
             ->where('wash_status', '!=', 'done')
@@ -45,6 +49,7 @@ class QueueController extends Controller
             'bays' => self::BAYS,
             'activeSlots' => $activeSlots,
             'waitingList' => $waitingList,
+            'date' => $date,
         ]);
     }
 
@@ -60,13 +65,15 @@ class QueueController extends Controller
         $targetSlot = $validated['slot'];
 
         // Guard: transaction must be in waiting state
-        if ($transaction->queue_number === null || $transaction->slot !== null) {
-            return back()->with('error', 'Transaksi ini tidak dalam status menunggu antrian.');
+        if ($transaction->queue_number === null || $transaction->slot !== null || $transaction->wash_status !== 'waiting') {
+            return redirect()->route('queue.index', ['date' => $request->date])
+                ->with('error', 'Transaksi ini tidak dalam status menunggu antrian.');
         }
 
         // Guard: transaction must not already be done
         if ($transaction->wash_status === 'done') {
-            return back()->with('error', 'Transaksi ini sudah selesai.');
+            return redirect()->route('queue.index', ['date' => $request->date])
+                ->with('error', 'Transaksi ini sudah selesai.');
         }
 
         // Guard: target bay must be free
@@ -75,7 +82,8 @@ class QueueController extends Controller
             ->exists();
 
         if ($occupied) {
-            return back()->with('error', "{$targetSlot} sudah terisi. Selesaikan dulu transaksi yang sedang berjalan.");
+            return redirect()->route('queue.index', ['date' => $request->date])
+                ->with('error', "{$targetSlot} sudah terisi. Selesaikan dulu transaksi yang sedang berjalan.");
         }
 
         DB::transaction(function () use ($transaction, $targetSlot) {
@@ -85,17 +93,19 @@ class QueueController extends Controller
             ]);
         });
 
-        return back()->with('success', "Transaksi #{$transaction->queue_number} berhasil ditugaskan ke {$targetSlot}.");
+        return redirect()->route('queue.index', ['date' => $request->date])
+            ->with('success', "Transaksi #{$transaction->queue_number} berhasil ditugaskan ke {$targetSlot}.");
     }
 
     /**
      * Release a transaction from its bay (mark wash as done, clear queue data).
      */
-    public function release(Transaction $transaction): RedirectResponse
+    public function release(Request $request, Transaction $transaction): RedirectResponse
     {
         // Guard: transaction must be assigned to a bay
         if ($transaction->slot === null) {
-            return back()->with('error', 'Transaksi ini tidak sedang berada di bay manapun.');
+            return redirect()->route('queue.index', ['date' => $request->date])
+                ->with('error', 'Transaksi ini tidak sedang berada di bay manapun.');
         }
 
         DB::transaction(function () use ($transaction) {
@@ -106,6 +116,7 @@ class QueueController extends Controller
             ]);
         });
 
-        return back()->with('success', 'Transaksi selesai dan dikeluarkan dari antrian.');
+        return redirect()->route('queue.index', ['date' => $request->date])
+            ->with('success', 'Transaksi selesai dan dikeluarkan dari antrian.');
     }
 }

@@ -177,14 +177,14 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
             id: 'actions',
             header: 'Aksi',
             cell: ({ row }) => (
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-1.5">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
-                                    variant="outline"
+                                    variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-primary hover:text-primary"
+                                    className="h-8 w-8 rounded-lg text-blue-600 hover:bg-blue-50 hover:text-blue-700"
                                     onClick={() => setSelectedTransaction(row.original)}
                                 >
                                     <Check className="h-4 w-4" />
@@ -198,7 +198,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Button variant="outline" size="icon" asChild className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                                <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700">
                                     <Link href={`/transactions/${row.original.id}`}>
                                         <Eye className="h-4 w-4" />
                                         <span className="sr-only">Lihat</span>
@@ -213,9 +213,9 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
-                                    variant="outline"
+                                    variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-red-600 hover:text-red-600"
+                                    className="h-8 w-8 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700"
                                     onClick={() => handleDelete(row.original)}
                                 >
                                     <Trash2 className="h-4 w-4" />
@@ -240,6 +240,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                 <PageHeader
                     title="Transaksi"
                     description="Kelola dan lacak transaksi cuci mobil."
+                    accentColor="blue"
                     action={{ label: 'Transaksi Baru', href: '/transactions/create' }}
                 />
 

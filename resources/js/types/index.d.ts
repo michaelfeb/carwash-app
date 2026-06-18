@@ -175,6 +175,9 @@ export interface PaginationLink {
 export interface DashboardStats {
     todayTransactions: number;
     todayRevenue: number;
+    todayOwnerShare: number;
+    todayStaffPool: number;
+    todayLoyaltyDiscount: number;
     pendingPayments: number;
     carsInProgress: number;
     totalCustomers: number;
@@ -190,6 +193,22 @@ export interface RevenueChartData {
 export interface ServiceChartData {
     name: string;   // e.g. "Cuci Reguler"
     total: number;  // transaction count
+}
+
+export interface TopCustomer {
+    id: number;
+    name: string;
+    phone: string | null;
+    transactions_count: number;
+    total_spending: number;
+    loyalty_stamps: number;
+}
+
+export interface StaffPerformance {
+    id: number;
+    name: string;
+    weekly_transactions: number;
+    weekly_revenue: number;
 }
 
 // Flash Messages

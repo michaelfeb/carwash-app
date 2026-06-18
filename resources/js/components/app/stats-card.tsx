@@ -14,7 +14,7 @@ interface StatsCardProps {
         isPositive: boolean;
     };
     className?: string;
-    accentColor?: 'blue' | 'indigo' | 'sky' | 'violet' | 'cyan' | 'emerald';
+    accentColor?: 'blue' | 'indigo' | 'sky' | 'violet' | 'cyan' | 'emerald' | 'purple' | 'amber';
 }
 
 const accentMap: Record<NonNullable<StatsCardProps['accentColor']>, { bubble: string; icon: string; border: string }> = {
@@ -24,6 +24,8 @@ const accentMap: Record<NonNullable<StatsCardProps['accentColor']>, { bubble: st
     violet:  { bubble: 'bg-violet-100', icon: 'text-violet-600', border: 'border-t-violet-500' },
     cyan:    { bubble: 'bg-cyan-100',   icon: 'text-cyan-600',   border: 'border-t-cyan-500' },
     emerald: { bubble: 'bg-emerald-100',icon: 'text-emerald-600',border: 'border-t-emerald-500' },
+    purple:  { bubble: 'bg-purple-100', icon: 'text-purple-600', border: 'border-t-purple-500' },
+    amber:   { bubble: 'bg-amber-100',  icon: 'text-amber-600',  border: 'border-t-amber-500' },
 };
 
 export function StatsCard({ title, value, description, icon: Icon, trend, className, accentColor = 'blue' }: StatsCardProps) {

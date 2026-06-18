@@ -43,6 +43,7 @@ export default function ReportsIndex() {
                 <PageHeader
                     title="Laporan"
                     description="Buat dan ekspor laporan bisnis"
+                    accentColor="amber"
                 />
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -52,22 +52,22 @@ export default function UsersIndex({ users }: UsersIndexProps) {
             cell: ({ row }) => (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 rounded-lg p-0 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
+                    <DropdownMenuContent align="end" className="rounded-xl">
+                        <DropdownMenuItem asChild className="gap-2 rounded-lg">
                             <Link href={`/users/${row.original.id}/edit`}>
-                                <Pencil className="mr-2 h-4 w-4" />
+                                <Pencil className="h-4 w-4 text-blue-500" />
                                 Ubah
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                            className="text-red-600"
+                            className="gap-2 rounded-lg text-red-600 focus:text-red-600"
                             onClick={() => handleDelete(row.original)}
                         >
-                            <Trash2 className="mr-2 h-4 w-4" />
+                            <Trash2 className="h-4 w-4" />
                             Hapus
                         </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -86,6 +86,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                 <PageHeader
                     title="Pengguna"
                     description="Kelola akun pemilik dan kasir"
+                    accentColor="indigo"
                     action={{ label: 'Tambah Pengguna', href: '/users/create' }}
                 />
 

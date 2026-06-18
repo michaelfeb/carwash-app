@@ -7,17 +7,35 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TrackController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
+    $todayStats = [
+        'transactions_today' => Transaction::whereDate('created_at', today())->count(),
+        'queue_active'       => Transaction::whereDate('created_at', today())
+            ->whereNotNull('queue_number')
+            ->where('wash_status', '!=', 'done')
+            ->count(),
+        'bays_active'        => Transaction::whereDate('created_at', today())
+            ->whereNotNull('slot')
+            ->where('wash_status', '!=', 'done')
+            ->count(),
+    ];
+
     return Inertia::render('welcome', [
         'canRegister' => Features::enabled(Features::registration()),
+        'stats'       => $todayStats,
     ]);
 })->name('home');
+
+// Public tracking — no auth required
+Route::get('/track', [TrackController::class, 'index'])->name('track.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
