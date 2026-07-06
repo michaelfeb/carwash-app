@@ -14,7 +14,7 @@ export default function AuthSplitLayout({
     title,
     description,
 }: PropsWithChildren<AuthLayoutProps>) {
-    const { name, quote } = usePage<SharedData>().props;
+    const { quote } = usePage<SharedData>().props;
 
     return (
         <div className="relative grid h-dvh flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -24,8 +24,10 @@ export default function AuthSplitLayout({
                     href={home()}
                     className="relative z-20 flex items-center text-lg font-medium"
                 >
-                    <AppLogoIcon className="mr-2 size-8 fill-current text-white" />
-                    {name}
+                    <span className="mr-3 size-11 overflow-hidden rounded-xl border border-amber-300/20 bg-black shadow-md">
+                        <AppLogoIcon className="size-full object-cover" />
+                    </span>
+                    RK Carwash
                 </Link>
                 {quote && (
                     <div className="relative z-20 mt-auto">
@@ -46,7 +48,9 @@ export default function AuthSplitLayout({
                         href={home()}
                         className="relative z-20 flex items-center justify-center lg:hidden"
                     >
-                        <AppLogoIcon className="h-10 fill-current text-black sm:h-12" />
+                        <span className="size-16 overflow-hidden rounded-2xl border border-amber-400/20 bg-black shadow-md">
+                            <AppLogoIcon className="size-full object-cover" />
+                        </span>
                     </Link>
                     <div className="flex flex-col items-start gap-2 text-left sm:items-center sm:text-center">
                         <h1 className="text-xl font-medium">{title}</h1>

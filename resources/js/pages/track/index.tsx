@@ -1,6 +1,14 @@
+import AppLogoIcon from '@/components/app-logo-icon';
 import { Card, CardContent } from '@/components/ui/card';
 import { Head, router } from '@inertiajs/react';
-import { Car, CheckCircle, Clock, Hash, ParkingCircle, Search, Waves, Wrench } from 'lucide-react';
+import {
+    Car,
+    CheckCircle,
+    Clock,
+    ParkingCircle,
+    Search,
+    Waves,
+} from 'lucide-react';
 import * as React from 'react';
 
 interface ActiveCar {
@@ -34,7 +42,13 @@ interface TrackIndexProps {
     search: string;
 }
 
-export default function TrackIndex({ bays, notWashed, alreadyWashed, highlightedId, search }: TrackIndexProps) {
+export default function TrackIndex({
+    bays,
+    notWashed,
+    alreadyWashed,
+    highlightedId,
+    search,
+}: TrackIndexProps) {
     const [searchValue, setSearchValue] = React.useState(search);
     const highlightRef = React.useRef<HTMLDivElement>(null);
 
@@ -54,7 +68,10 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
     // Scroll to highlighted item
     React.useEffect(() => {
         if (highlightedId && highlightRef.current) {
-            highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            highlightRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
         }
     }, [highlightedId, notWashed, alreadyWashed]);
 
@@ -62,7 +79,11 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
         e.preventDefault();
         const trimmed = searchValue.trim();
         if (trimmed) {
-            router.get('/track', { search: trimmed }, { preserveState: true, preserveScroll: true });
+            router.get(
+                '/track',
+                { search: trimmed },
+                { preserveState: true, preserveScroll: true },
+            );
         }
     };
 
@@ -82,12 +103,17 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                 <header className="sticky top-0 z-10 border-b border-slate-200/60 bg-white/80 backdrop-blur-md">
                     <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600">
-                                <Car className="h-5 w-5 text-white" />
+                            <div className="h-10 w-10 overflow-hidden rounded-xl border border-amber-400/20 bg-black shadow-sm">
+                                <AppLogoIcon className="h-full w-full object-cover" />
                             </div>
-                            <span className="text-lg font-bold text-slate-800">CarWash Pro</span>
+                            <span className="text-lg font-bold text-slate-800">
+                                RK Carwash
+                            </span>
                         </div>
-                        <a href="/" className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700">
+                        <a
+                            href="/"
+                            className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700"
+                        >
                             Beranda
                         </a>
                     </div>
@@ -96,8 +122,13 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                 <main className="mx-auto max-w-4xl px-6 py-8">
                     {/* ── Hero ─────────────────────────────────────── */}
                     <div className="mb-8 text-center">
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Lacak Status Cuci</h1>
-                        <p className="mt-2 text-slate-500">Pantau antrian dan progres pencucian kendaraan Anda secara real-time.</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+                            Lacak Status Cuci
+                        </h1>
+                        <p className="mt-2 text-slate-500">
+                            Pantau antrian dan progres pencucian kendaraan Anda
+                            secara real-time.
+                        </p>
                     </div>
 
                     {/* ── Search Form ──────────────────────────────── */}
@@ -110,9 +141,11 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                 <input
                                     type="text"
                                     value={searchValue}
-                                    onChange={(e) => setSearchValue(e.target.value)}
+                                    onChange={(e) =>
+                                        setSearchValue(e.target.value)
+                                    }
                                     placeholder="Masukkan nomor DA mobil"
-                                    className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-4 text-lg font-medium text-slate-800 shadow-sm outline-none transition-all placeholder:text-slate-400 hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10"
+                                    className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-lg font-medium text-slate-800 shadow-sm transition-all outline-none placeholder:text-slate-400 hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10"
                                 />
                             </div>
                             <button
@@ -142,28 +175,40 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                         <div className="flex items-center gap-2.5">
                                             <div
                                                 className={`flex h-9 w-9 items-center justify-center rounded-xl ${
-                                                    bay.occupied ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'
+                                                    bay.occupied
+                                                        ? 'bg-red-100 text-red-600'
+                                                        : 'bg-emerald-100 text-emerald-600'
                                                 }`}
                                             >
                                                 <ParkingCircle className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <h3 className="text-sm font-bold text-slate-800">{bay.label}</h3>
+                                                <h3 className="text-sm font-bold text-slate-800">
+                                                    {bay.label}
+                                                </h3>
                                                 <div className="flex items-center gap-1.5">
                                                     <span
                                                         className={`inline-flex h-2 w-2 rounded-full ${
-                                                            bay.occupied ? 'bg-red-500 animate-pulse' : 'bg-emerald-500'
+                                                            bay.occupied
+                                                                ? 'animate-pulse bg-red-500'
+                                                                : 'bg-emerald-500'
                                                         }`}
                                                     />
-                                                    <span className={`text-xs font-medium ${bay.occupied ? 'text-red-600' : 'text-emerald-600'}`}>
-                                                        {bay.occupied ? 'Sedang Dicuci' : 'Tersedia'}
+                                                    <span
+                                                        className={`text-xs font-medium ${bay.occupied ? 'text-red-600' : 'text-emerald-600'}`}
+                                                    >
+                                                        {bay.occupied
+                                                            ? 'Sedang Dicuci'
+                                                            : 'Tersedia'}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                         {bay.active && (
                                             <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-bold text-slate-700 ring-1 ring-slate-200/60">
-                                                {formatPlate(bay.active.license_plate)}
+                                                {formatPlate(
+                                                    bay.active.license_plate,
+                                                )}
                                             </span>
                                         )}
                                     </div>
@@ -176,9 +221,12 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                             </div>
                                             <div className="min-w-0">
                                                 <p className="truncate text-sm font-semibold text-slate-800">
-                                                    {bay.active.carwash_type || '-'}
+                                                    {bay.active.carwash_type ||
+                                                        '-'}
                                                 </p>
-                                                <p className="text-xs text-slate-500">Sedang dalam proses</p>
+                                                <p className="text-xs text-slate-500">
+                                                    Sedang dalam proses
+                                                </p>
                                             </div>
                                         </div>
                                     ) : (
@@ -186,7 +234,9 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
                                                 <Car className="h-5 w-5 text-slate-300" />
                                             </div>
-                                            <p className="text-sm text-slate-400">Menunggu kendaraan</p>
+                                            <p className="text-sm text-slate-400">
+                                                Menunggu kendaraan
+                                            </p>
                                         </div>
                                     )}
                                 </CardContent>
@@ -195,7 +245,10 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                     </div>
 
                     {/* ── 2-Column: Not Washed / Already Washed ──────── */}
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2" ref={highlightRef}>
+                    <div
+                        className="grid grid-cols-1 gap-6 md:grid-cols-2"
+                        ref={highlightRef}
+                    >
                         {/* Left: Belum Dicuci */}
                         <Card className="overflow-hidden rounded-2xl border border-slate-200/60 shadow-sm">
                             <div className="flex items-center gap-3 border-b border-amber-100 bg-amber-50/70 px-5 py-4">
@@ -203,8 +256,12 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                     <Clock className="h-[18px] w-[18px] text-amber-600" />
                                 </div>
                                 <div>
-                                    <h2 className="text-[15px] font-bold text-slate-800">Belum Dicuci</h2>
-                                    <p className="text-xs text-slate-500">{notWashed.length} kendaraan</p>
+                                    <h2 className="text-[15px] font-bold text-slate-800">
+                                        Belum Dicuci
+                                    </h2>
+                                    <p className="text-xs text-slate-500">
+                                        {notWashed.length} kendaraan
+                                    </p>
                                 </div>
                             </div>
                             <CardContent className="p-0">
@@ -213,7 +270,9 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                         <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100">
                                             <Car className="h-5 w-5 text-slate-300" />
                                         </div>
-                                        <p className="text-sm text-slate-400">Belum ada antrian</p>
+                                        <p className="text-sm text-slate-400">
+                                            Belum ada antrian
+                                        </p>
                                     </div>
                                 ) : (
                                     <div className="divide-y divide-slate-50">
@@ -222,24 +281,29 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                                 key={item.id}
                                                 className={`flex items-center gap-4 px-5 py-3.5 transition-colors ${
                                                     isHighlighted(item.id)
-                                                        ? 'bg-sky-100 ring-2 ring-inset ring-sky-400/30'
+                                                        ? 'bg-sky-100 ring-2 ring-sky-400/30 ring-inset'
                                                         : 'hover:bg-slate-50'
                                                 }`}
                                             >
                                                 <span
-                                                    className={`inline-flex h-9 min-w-[36px] items-center justify-center rounded-lg px-2 text-xs font-bold uppercase tracking-wider ${
+                                                    className={`inline-flex h-9 min-w-[36px] items-center justify-center rounded-lg px-2 text-xs font-bold tracking-wider uppercase ${
                                                         isHighlighted(item.id)
                                                             ? 'bg-sky-500 text-white'
                                                             : 'bg-slate-200 text-slate-700'
                                                     }`}
                                                 >
-                                                    {formatPlate(item.license_plate)}
+                                                    {formatPlate(
+                                                        item.license_plate,
+                                                    )}
                                                 </span>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="truncate text-sm font-semibold text-slate-800">
-                                                        {item.carwash_type || '-'}
+                                                        {item.carwash_type ||
+                                                            '-'}
                                                     </p>
-                                                    <p className="text-xs text-slate-500">Menunggu giliran</p>
+                                                    <p className="text-xs text-slate-500">
+                                                        Menunggu giliran
+                                                    </p>
                                                 </div>
                                                 {isHighlighted(item.id) && (
                                                     <span className="inline-flex items-center gap-1 rounded-full bg-sky-500 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -260,8 +324,12 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                     <CheckCircle className="h-[18px] w-[18px] text-emerald-600" />
                                 </div>
                                 <div>
-                                    <h2 className="text-[15px] font-bold text-slate-800">Sudah Dicuci</h2>
-                                    <p className="text-xs text-slate-500">{alreadyWashed.length} kendaraan</p>
+                                    <h2 className="text-[15px] font-bold text-slate-800">
+                                        Sudah Dicuci
+                                    </h2>
+                                    <p className="text-xs text-slate-500">
+                                        {alreadyWashed.length} kendaraan
+                                    </p>
                                 </div>
                             </div>
                             <CardContent className="p-0">
@@ -270,7 +338,9 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                         <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100">
                                             <CheckCircle className="h-5 w-5 text-slate-300" />
                                         </div>
-                                        <p className="text-sm text-slate-400">Belum ada yang selesai</p>
+                                        <p className="text-sm text-slate-400">
+                                            Belum ada yang selesai
+                                        </p>
                                     </div>
                                 ) : (
                                     <div className="divide-y divide-slate-50">
@@ -279,24 +349,29 @@ export default function TrackIndex({ bays, notWashed, alreadyWashed, highlighted
                                                 key={item.id}
                                                 className={`flex items-center gap-4 px-5 py-3.5 transition-colors ${
                                                     isHighlighted(item.id)
-                                                        ? 'bg-sky-100 ring-2 ring-inset ring-sky-400/30'
+                                                        ? 'bg-sky-100 ring-2 ring-sky-400/30 ring-inset'
                                                         : 'hover:bg-slate-50'
                                                 }`}
                                             >
                                                 <span
-                                                    className={`inline-flex h-9 min-w-[36px] items-center justify-center rounded-lg px-2 text-xs font-bold uppercase tracking-wider ${
+                                                    className={`inline-flex h-9 min-w-[36px] items-center justify-center rounded-lg px-2 text-xs font-bold tracking-wider uppercase ${
                                                         isHighlighted(item.id)
                                                             ? 'bg-sky-500 text-white'
                                                             : 'bg-emerald-100 text-emerald-700'
                                                     }`}
                                                 >
-                                                    {formatPlate(item.license_plate)}
+                                                    {formatPlate(
+                                                        item.license_plate,
+                                                    )}
                                                 </span>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="truncate text-sm font-semibold text-slate-800">
-                                                        {item.carwash_type || '-'}
+                                                        {item.carwash_type ||
+                                                            '-'}
                                                     </p>
-                                                    <p className="text-xs text-emerald-600">Selesai</p>
+                                                    <p className="text-xs text-emerald-600">
+                                                        Selesai
+                                                    </p>
                                                 </div>
                                                 <CheckCircle className="h-4 w-4 flex-shrink-0 text-emerald-400" />
                                             </div>

@@ -98,10 +98,10 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>LAPORAN TOP CUSTOMER</h1>
-        <p>Periode: {{ $dateFrom->format('d M Y') }} - {{ $dateTo->format('d M Y') }}</p>
-    </div>
+    @include('reports.partials.header', [
+        'reportTitle' => 'LAPORAN TOP CUSTOMER',
+        'reportPeriod' => 'Periode: ' . $dateFrom->format('d M Y') . ' - ' . $dateTo->format('d M Y'),
+    ])
 
     <div class="summary">
         <div class="summary-item">

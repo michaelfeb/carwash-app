@@ -98,10 +98,10 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>LAPORAN PENDAPATAN BULANAN</h1>
-        <p>Periode: {{ $month->format('F Y') }}</p>
-    </div>
+    @include('reports.partials.header', [
+        'reportTitle' => 'LAPORAN PENDAPATAN BULANAN',
+        'reportPeriod' => 'Periode: ' . $month->format('F Y'),
+    ])
 
     <div class="summary">
         <div class="summary-item">

@@ -103,10 +103,10 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>LAPORAN TRANSAKSI HARIAN</h1>
-        <p>Tanggal: {{ $date->format('d F Y') }}</p>
-    </div>
+    @include('reports.partials.header', [
+        'reportTitle' => 'LAPORAN TRANSAKSI HARIAN',
+        'reportPeriod' => 'Tanggal: ' . $date->format('d F Y'),
+    ])
 
     <div class="summary">
         <div class="summary-item">
