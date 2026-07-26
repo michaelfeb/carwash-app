@@ -146,7 +146,8 @@
     <div class="info-box">
         <strong>📊 Mekanisme Pembagian 60/40:</strong>
         Dari setiap transaksi, 60% untuk Owner dan 40% masuk Pool Staff.
-        Pool Staff dibagi <strong>proporsional</strong> sesuai jumlah transaksi yang dikerjakan setiap staff.
+        Pool Staff dibagi <strong>proporsional</strong> sesuai jumlah transaksi yang ditangani setiap staff.
+        Satu transaksi dapat ditangani beberapa staff; setiap pasangan staff-transaksi dihitung sebagai satu penugasan.
     </div>
 
     <div class="summary">
@@ -164,8 +165,8 @@
                 <span class="summary-value">{{ $workingStaffCount }} orang</span>
             </div>
             <div class="summary-item">
-                <span class="summary-label">Total Partisipasi</span>
-                <span class="summary-value highlight">{{ $totalTransactionParticipation }} transaksi</span>
+                <span class="summary-label">Total Penugasan Staff</span>
+                <span class="summary-value highlight">{{ $totalStaffAssignments }} penugasan</span>
             </div>
         </div>
     </div>
@@ -176,7 +177,7 @@
                 <th>No</th>
                 <th>Nama Staff</th>
                 <th>No. Telepon</th>
-                <th class="text-center">Transaksi</th>
+                <th class="text-center">Transaksi Ditangani</th>
                 <th class="text-center">Persentase</th>
                 <th class="text-right">Bagian (Proporsional)</th>
             </tr>
@@ -200,7 +201,7 @@
             @if($staffs->count() > 0)
                 <tr class="total-row">
                     <td colspan="3">TOTAL</td>
-                    <td class="text-center">{{ $totalTransactionParticipation }}</td>
+                    <td class="text-center">{{ $totalStaffAssignments }}</td>
                     <td class="text-center">100%</td>
                     <td class="text-right">Rp {{ number_format($totalShareAmount, 0, ',', '.') }}</td>
                 </tr>
@@ -211,7 +212,7 @@
     <div class="footer">
         <p>Dicetak pada: {{ now()->format('d M Y H:i:s') }}</p>
         <p style="margin-top: 5px; font-style: italic;">
-            * Pembagian dihitung proporsional: (Transaksi Staff / Total Partisipasi) × Pool Staff (40%)
+            * Pembagian dihitung proporsional: (Transaksi Ditangani Staff / Total Penugasan Staff) × Pool Staff (40%)
         </p>
     </div>
 </body>

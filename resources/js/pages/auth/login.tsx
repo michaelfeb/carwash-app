@@ -26,6 +26,7 @@ export default function Login({
         <AuthLayout
             title="Masuk ke akun Anda"
             description="Masukkan email dan kata sandi Anda di bawah ini untuk masuk"
+            logoClassName="size-28 sm:size-32"
         >
             <Head title="Masuk" />
 

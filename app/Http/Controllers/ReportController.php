@@ -166,18 +166,18 @@ class ReportController extends Controller
                 return $staff;
             });
 
-        // Calculate total transaction participation (sum of all staff transaction counts)
-        $totalTransactionParticipation = $staffs->sum('transaction_count');
+        // One transaction handled by three staff produces three staff assignments.
+        $totalStaffAssignments = $staffs->sum('transaction_count');
 
         // Calculate proportional share for each staff
-        $staffs = $staffs->map(function ($staff) use ($totalStaffPool, $totalTransactionParticipation) {
-            if ($totalTransactionParticipation > 0) {
-                // Share = (staff's transaction count / total participation) * total pool
+        $staffs = $staffs->map(function ($staff) use ($totalStaffPool, $totalStaffAssignments) {
+            if ($totalStaffAssignments > 0) {
+                // Share = (staff's handled transactions / total staff assignments) * total pool
                 $staff->share_amount = (int) floor(
-                    ($staff->transaction_count / $totalTransactionParticipation) * $totalStaffPool
+                    ($staff->transaction_count / $totalStaffAssignments) * $totalStaffPool
                 );
                 $staff->share_percentage = round(
-                    ($staff->transaction_count / $totalTransactionParticipation) * 100,
+                    ($staff->transaction_count / $totalStaffAssignments) * 100,
                     2
                 );
             } else {
@@ -197,7 +197,7 @@ class ReportController extends Controller
             'totalShareAmount' => $totalShareAmount,
             'totalTransactions' => $totalTransactions,
             'workingStaffCount' => $workingStaffCount,
-            'totalTransactionParticipation' => $totalTransactionParticipation,
+            'totalStaffAssignments' => $totalStaffAssignments,
         ]);
 
         return $pdf->download("staff-performance-{$dateFrom}-to-{$dateTo}.pdf");

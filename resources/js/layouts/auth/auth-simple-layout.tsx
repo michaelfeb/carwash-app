@@ -1,4 +1,5 @@
 import AppLogoIcon from '@/components/app-logo-icon';
+import { cn } from '@/lib/utils';
 import { home } from '@/routes';
 import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
@@ -7,12 +8,14 @@ interface AuthLayoutProps {
     name?: string;
     title?: string;
     description?: string;
+    logoClassName?: string;
 }
 
 export default function AuthSimpleLayout({
     children,
     title,
     description,
+    logoClassName,
 }: PropsWithChildren<AuthLayoutProps>) {
     return (
         <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
@@ -23,7 +26,12 @@ export default function AuthSimpleLayout({
                             href={home()}
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <div className="mb-1 size-16 overflow-hidden rounded-2xl border border-amber-400/20 bg-black shadow-md">
+                            <div
+                                className={cn(
+                                    'mb-1 size-16 overflow-hidden rounded-2xl border border-amber-400/20 bg-black shadow-md',
+                                    logoClassName,
+                                )}
+                            >
                                 <AppLogoIcon className="size-full object-cover" />
                             </div>
                             <span className="sr-only">{title}</span>

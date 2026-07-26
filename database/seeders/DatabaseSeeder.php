@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethodSeeder::class,
             StaffSeeder::class,
             CustomerSeeder::class,
+            TransactionSeeder::class,
         ]);
     }
 }
