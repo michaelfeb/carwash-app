@@ -104,8 +104,8 @@ function SectionHeader({ icon: Icon, iconBg, iconColor, title, subtitle, action 
                     <Icon className={`h-[18px] w-[18px] ${iconColor}`} />
                 </div>
                 <div>
-                    <h2 className="text-[15px] font-semibold text-slate-800">{title}</h2>
-                    <p className="text-xs text-slate-500">{subtitle}</p>
+                    <h2 className="text-[15px] font-semibold text-foreground">{title}</h2>
+                    <p className="text-xs text-muted-foreground">{subtitle}</p>
                 </div>
             </div>
             {action}
@@ -126,8 +126,8 @@ function EmptyState({ icon: Icon, iconBg, iconColor, title, subtitle }: {
             <div className={`mb-3 flex h-14 w-14 items-center justify-center rounded-2xl ${iconBg}`}>
                 <Icon className={`h-7 w-7 ${iconColor}`} />
             </div>
-            <p className="text-sm font-semibold text-slate-600">{title}</p>
-            <p className="mt-1 text-xs text-slate-400">{subtitle}</p>
+            <p className="text-sm font-semibold text-foreground">{title}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>
         </div>
     );
 }
@@ -227,8 +227,8 @@ export default function Dashboard({ stats, recentTransactions, revenueChart, ser
                 </div>
 
                 {/* ── Recent Transactions ───────────────────────────────── */}
-                <Card className="overflow-hidden rounded-2xl border border-slate-200/60 shadow-sm">
-                    <div className="border-b border-slate-100 bg-white px-5 py-4">
+                <Card className="overflow-hidden rounded-2xl border border-border shadow-sm">
+                    <div className="border-b border-border bg-card px-5 py-4">
                         <SectionHeader
                             icon={ListOrdered}
                             iconBg="bg-blue-50"
@@ -251,22 +251,22 @@ export default function Dashboard({ stats, recentTransactions, revenueChart, ser
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                     <thead>
-                                        <tr className="border-b border-slate-100 bg-slate-50/50">
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Faktur</th>
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Pelanggan</th>
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Jenis</th>
-                                            <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">Harga</th>
-                                            <th className="px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">Cuci</th>
-                                            <th className="px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">Bayar</th>
+                                        <tr className="border-b border-border bg-muted/50">
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Faktur</th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Pelanggan</th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Jenis</th>
+                                            <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Harga</th>
+                                            <th className="px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Cuci</th>
+                                            <th className="px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Bayar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {recentTransactions.map((t) => (
-                                            <tr key={t.id} className="border-b border-slate-50 transition-colors hover:bg-blue-50/40">
-                                                <td className="px-5 py-3 text-sm font-semibold text-blue-700">{t.invoice_number}</td>
-                                                <td className="px-5 py-3 text-sm text-slate-700">{t.customer?.name ?? '-'}</td>
-                                                <td className="px-5 py-3 text-sm text-slate-600">{t.carwash_type?.name}</td>
-                                                <td className="px-5 py-3 text-right text-sm font-semibold text-slate-800">{formatRupiah(t.price)}</td>
+                                            <tr key={t.id} className="border-b border-border/60 transition-colors hover:bg-accent/50">
+                                                <td className="px-5 py-3 text-sm font-semibold text-primary">{t.invoice_number}</td>
+                                                <td className="px-5 py-3 text-sm text-foreground">{t.customer?.name ?? '-'}</td>
+                                                <td className="px-5 py-3 text-sm text-muted-foreground">{t.carwash_type?.name}</td>
+                                                <td className="px-5 py-3 text-right text-sm font-semibold text-foreground">{formatRupiah(t.price)}</td>
                                                 <td className="px-5 py-3 text-center"><WashStatusBadge status={t.wash_status} /></td>
                                                 <td className="px-5 py-3 text-center"><PaymentStatusBadge status={t.payment_status} /></td>
                                             </tr>

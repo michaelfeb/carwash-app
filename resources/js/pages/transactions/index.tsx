@@ -121,7 +121,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
         {
             header: 'Layanan',
             cell: ({ row }) => (
-                <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-950/50 dark:text-blue-300 dark:ring-blue-400/20">
                     {row.original.carwash_type?.name}
                 </span>
             ),
@@ -148,7 +148,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                     )}
                     <span className="font-medium">{formatRupiah(row.original.price)}</span>
                     {row.original.loyalty_discount_applied && (
-                        <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                        <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950/50 dark:text-emerald-300 dark:ring-emerald-400/20">
                             Diskon 25%
                         </span>
                     )}
@@ -198,7 +198,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700">
+                                <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground">
                                     <Link href={`/transactions/${row.original.id}`}>
                                         <Eye className="h-4 w-4" />
                                         <span className="sr-only">Lihat</span>

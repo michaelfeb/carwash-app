@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
             {!hideSearch && (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="relative flex-1 max-w-sm">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             placeholder={searchPlaceholder}
                             value={searchKey ? (table.getColumn(searchKey)?.getFilterValue() as string) ?? '' : globalFilter}
@@ -94,17 +94,17 @@ export function DataTable<TData, TValue>({
                                     ? table.getColumn(searchKey)?.setFilterValue(event.target.value)
                                     : setGlobalFilter(event.target.value)
                             }
-                            className="h-9 rounded-lg border-slate-200/60 bg-white pl-9 text-sm shadow-sm transition-colors focus-visible:border-blue-400 focus-visible:ring-blue-400/20"
+                            className="h-9 rounded-lg border-border bg-background pl-9 text-sm shadow-sm transition-colors focus-visible:border-primary focus-visible:ring-primary/20"
                         />
                     </div>
                     {!meta && (
-                        <div className="flex items-center gap-2 text-sm text-slate-500">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span>Tampilkan</span>
                             <Select
                                 value={`${table.getState().pagination.pageSize}`}
                                 onValueChange={(value) => table.setPageSize(Number(value))}
                             >
-                                <SelectTrigger className="h-9 w-[70px] rounded-lg border-slate-200/60 text-sm">
+                                <SelectTrigger className="h-9 w-[70px] rounded-lg border-border bg-background text-sm">
                                     <SelectValue placeholder={table.getState().pagination.pageSize} />
                                 </SelectTrigger>
                                 <SelectContent side="top">
@@ -120,7 +120,7 @@ export function DataTable<TData, TValue>({
             )}
 
             {/* Table */}
-            <div className="overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -149,11 +149,10 @@ export function DataTable<TData, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row, index) => (
+                            table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    className="border-b border-slate-50 transition-colors hover:bg-blue-50/40"
-                                    style={{ backgroundColor: index % 2 === 0 ? 'white' : '#fafbfc' }}
+                                    className="border-b border-border/60 transition-colors even:bg-muted/30 hover:bg-accent/50"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
@@ -166,12 +165,12 @@ export function DataTable<TData, TValue>({
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-32">
                                     <div className="flex flex-col items-center justify-center gap-3">
-                                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
-                                            <Inbox className="h-7 w-7 text-slate-300" />
+                                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+                                            <Inbox className="h-7 w-7 text-muted-foreground/50" />
                                         </div>
                                         <div className="text-center">
-                                            <p className="text-sm font-semibold text-slate-600">Tidak ada data</p>
-                                            <p className="mt-0.5 text-xs text-slate-400">Tidak ada hasil yang ditemukan.</p>
+                                            <p className="text-sm font-semibold text-foreground">Tidak ada data</p>
+                                            <p className="mt-0.5 text-xs text-muted-foreground">Tidak ada hasil yang ditemukan.</p>
                                         </div>
                                     </div>
                                 </TableCell>
@@ -185,14 +184,14 @@ export function DataTable<TData, TValue>({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 {meta ? (
                     <>
-                        <p className="text-sm text-slate-500">
-                            Menampilkan <span className="font-medium text-slate-700">{meta.from}</span>–<span className="font-medium text-slate-700">{meta.to}</span> dari <span className="font-medium text-slate-700">{meta.total}</span> entri
+                        <p className="text-sm text-muted-foreground">
+                            Menampilkan <span className="font-medium text-foreground">{meta.from}</span>–<span className="font-medium text-foreground">{meta.to}</span> dari <span className="font-medium text-foreground">{meta.total}</span> entri
                         </p>
                         <div className="flex items-center gap-1.5">
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => meta.first_page_url && router.get(meta.first_page_url)}
                                 disabled={meta.current_page === 1}
                             >
@@ -201,19 +200,19 @@ export function DataTable<TData, TValue>({
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => meta.prev_page_url && router.get(meta.prev_page_url)}
                                 disabled={!meta.prev_page_url}
                             >
                                 <ChevronLeft className="h-3.5 w-3.5" />
                             </Button>
-                            <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                            <span className="rounded-lg bg-muted px-3 py-1 text-sm font-medium text-foreground">
                                 {meta.current_page} / {meta.last_page}
                             </span>
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => meta.next_page_url && router.get(meta.next_page_url)}
                                 disabled={!meta.next_page_url}
                             >
@@ -222,7 +221,7 @@ export function DataTable<TData, TValue>({
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => meta.last_page_url && router.get(meta.last_page_url)}
                                 disabled={meta.current_page === meta.last_page}
                             >
@@ -232,14 +231,14 @@ export function DataTable<TData, TValue>({
                     </>
                 ) : (
                     <>
-                        <p className="text-sm text-slate-500">
-                            Menampilkan <span className="font-medium text-slate-700">{table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}</span>–<span className="font-medium text-slate-700">{Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, table.getFilteredRowModel().rows.length)}</span> dari <span className="font-medium text-slate-700">{table.getFilteredRowModel().rows.length}</span> entri
+                        <p className="text-sm text-muted-foreground">
+                            Menampilkan <span className="font-medium text-foreground">{table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}</span>–<span className="font-medium text-foreground">{Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, table.getFilteredRowModel().rows.length)}</span> dari <span className="font-medium text-foreground">{table.getFilteredRowModel().rows.length}</span> entri
                         </p>
                         <div className="flex items-center gap-1.5">
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => table.setPageIndex(0)}
                                 disabled={!table.getCanPreviousPage()}
                             >
@@ -248,19 +247,19 @@ export function DataTable<TData, TValue>({
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => table.previousPage()}
                                 disabled={!table.getCanPreviousPage()}
                             >
                                 <ChevronLeft className="h-3.5 w-3.5" />
                             </Button>
-                            <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                            <span className="rounded-lg bg-muted px-3 py-1 text-sm font-medium text-foreground">
                                 {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
                             </span>
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => table.nextPage()}
                                 disabled={!table.getCanNextPage()}
                             >
@@ -269,7 +268,7 @@ export function DataTable<TData, TValue>({
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 w-8 rounded-lg border-slate-200/60 p-0"
+                                className="h-8 w-8 rounded-lg border-border p-0"
                                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                                 disabled={!table.getCanNextPage()}
                             >
@@ -284,7 +283,7 @@ export function DataTable<TData, TValue>({
 }
 
 // Helper function for sortable column headers
-export function createSortableHeader<T>(label: string) {
+export function createSortableHeader(label: string) {
     return ({ column }: { column: { getIsSorted: () => 'asc' | 'desc' | false, toggleSorting: (desc?: boolean) => void } }) => {
         return (
             <div

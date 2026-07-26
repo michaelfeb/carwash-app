@@ -48,7 +48,7 @@ export default function PaymentMethodsIndex({ paymentMethods }: PaymentMethodsIn
             cell: ({ row }) => (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 rounded-lg p-0 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 rounded-lg p-0 text-muted-foreground hover:bg-muted hover:text-foreground">
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>

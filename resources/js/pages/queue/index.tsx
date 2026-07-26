@@ -305,16 +305,16 @@ export default function QueueIndex({ bays, activeSlots, waitingList, date }: Que
                 </div>
 
                 {/* ── Waiting List ─────────────────────────────────────── */}
-                <Card className="overflow-hidden rounded-2xl border border-slate-200/60 shadow-sm">
-                    <div className="border-b border-slate-100 bg-white px-5 py-4">
+                <Card className="overflow-hidden rounded-2xl border border-border shadow-sm">
+                    <div className="border-b border-border bg-card px-5 py-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50">
                                     <ListOrdered className="h-[18px] w-[18px] text-amber-600" />
                                 </div>
                                 <div>
-                                    <h2 className="text-[15px] font-semibold text-slate-800">Daftar Antrian</h2>
-                                    <p className="text-xs text-slate-500">Kendaraan yang menunggu untuk dicuci</p>
+                                    <h2 className="text-[15px] font-semibold text-foreground">Daftar Antrian</h2>
+                                    <p className="text-xs text-muted-foreground">Kendaraan yang menunggu untuk dicuci</p>
                                 </div>
                             </div>
                             {waitingCount > 0 && (
@@ -328,11 +328,11 @@ export default function QueueIndex({ bays, activeSlots, waitingList, date }: Que
                     <CardContent className="p-0">
                         {waitingList.length === 0 ? (
                             <div className="flex flex-col items-center justify-center px-5 py-12">
-                                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
-                                    <ScrollText className="h-7 w-7 text-slate-300" />
+                                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+                                    <ScrollText className="h-7 w-7 text-muted-foreground/50" />
                                 </div>
-                                <p className="text-sm font-semibold text-slate-600">Antrian Kosong</p>
-                                <p className="mt-1 text-xs text-slate-400">Belum ada kendaraan dalam antrian. Buat transaksi baru untuk memulai.</p>
+                                <p className="text-sm font-semibold text-foreground">Antrian Kosong</p>
+                                <p className="mt-1 text-xs text-muted-foreground">Belum ada kendaraan dalam antrian. Buat transaksi baru untuk memulai.</p>
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -347,45 +347,45 @@ export default function QueueIndex({ bays, activeSlots, waitingList, date }: Que
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                     <thead>
-                                        <tr className="border-b border-slate-100 bg-slate-50/50">
-                                            <th className="w-16 px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">No</th>
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Faktur</th>
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Pelanggan</th>
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Layanan</th>
-                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">Kendaraan</th>
-                                            <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">Harga</th>
-                                            <th className="px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">Alokasikan</th>
+                                        <tr className="border-b border-border bg-muted/50">
+                                            <th className="w-16 px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">No</th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Faktur</th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Pelanggan</th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Layanan</th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Kendaraan</th>
+                                            <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Harga</th>
+                                            <th className="px-5 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Alokasikan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {waitingList.map((t, index) => (
-                                            <tr key={t.id} className="border-b border-slate-50 transition-colors hover:bg-sky-50/30">
+                                            <tr key={t.id} className="border-b border-border/60 transition-colors even:bg-muted/30 hover:bg-accent/50">
                                                 <td className="px-5 py-3 text-center">
                                                     <span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
                                                         index === 0
                                                             ? 'bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-sm'
-                                                            : 'bg-slate-100 text-slate-600'
+                                                            : 'bg-muted text-muted-foreground'
                                                     }`}>
                                                         {t.queue_number}
                                                     </span>
                                                 </td>
                                                 <td className="px-5 py-3">
-                                                    <span className="font-mono text-sm font-semibold text-slate-800">{t.invoice_number}</span>
+                                                    <span className="font-mono text-sm font-semibold text-foreground">{t.invoice_number}</span>
                                                 </td>
-                                                <td className="px-5 py-3 text-sm text-slate-700">{t.customer?.name || 'Pelanggan Langsung'}</td>
+                                                <td className="px-5 py-3 text-sm text-foreground">{t.customer?.name || 'Pelanggan Langsung'}</td>
                                                 <td className="px-5 py-3">
-                                                    <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10">
+                                                    <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10 dark:bg-blue-950/50 dark:text-blue-300 dark:ring-blue-400/20">
                                                         {t.carwash_type?.name || '-'}
                                                     </span>
                                                 </td>
                                                 <td className="px-5 py-3">
                                                     {t.license_plate ? (
-                                                        <span className="font-mono text-xs font-medium tracking-wide text-slate-800">{t.license_plate}</span>
+                                                        <span className="font-mono text-xs font-medium tracking-wide text-foreground">{t.license_plate}</span>
                                                     ) : (
-                                                        <span className="text-xs text-slate-400">—</span>
+                                                        <span className="text-xs text-muted-foreground">—</span>
                                                     )}
                                                 </td>
-                                                <td className="px-5 py-3 text-right text-sm font-semibold text-slate-800">{formatRupiah(t.price)}</td>
+                                                <td className="px-5 py-3 text-right text-sm font-semibold text-foreground">{formatRupiah(t.price)}</td>
                                                 <td className="px-5 py-3">
                                                     <div className="flex items-center justify-center gap-2">
                                                         {bays.map((bay) => {
@@ -402,7 +402,7 @@ export default function QueueIndex({ bays, activeSlots, waitingList, date }: Que
                                                                                 className={`h-8 gap-1.5 rounded-lg text-xs transition-all ${
                                                                                     isBayFree
                                                                                         ? `bg-gradient-to-r ${cfg.gradient} text-white shadow-sm hover:opacity-90`
-                                                                                        : 'border-slate-200 text-slate-400 line-through'
+                                                                                        : 'border-border text-muted-foreground line-through'
                                                                                 }`}
                                                                                 onClick={() => isBayFree && handleAssign(t.id, bay.key)}
                                                                             >

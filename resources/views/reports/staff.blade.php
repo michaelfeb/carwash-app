@@ -209,6 +209,8 @@
         </tbody>
     </table>
 
+    @include('reports.partials.signature')
+
     <div class="footer">
         <p>Dicetak pada: {{ now()->format('d M Y H:i:s') }}</p>
         <p style="margin-top: 5px; font-style: italic;">

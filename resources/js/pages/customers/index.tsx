@@ -71,13 +71,13 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
                                         <div
                                             key={i}
                                             className={`h-2.5 w-2.5 rounded-full ${
-                                                i < stamps ? 'bg-amber-500' : 'bg-gray-200'
+                                                i < stamps ? 'bg-amber-500' : 'bg-muted'
                                             }`}
                                         />
                                     ))}
                                     <div
                                         className={`ml-0.5 h-2.5 w-2.5 rounded-full ${
-                                            isEligible ? 'bg-emerald-500' : 'bg-gray-200'
+                                            isEligible ? 'bg-emerald-500' : 'bg-muted'
                                         }`}
                                     />
                                     {isEligible && (
@@ -101,7 +101,7 @@ export default function CustomersIndex({ customers }: CustomersIndexProps) {
             cell: ({ row }) => (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 rounded-lg p-0 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 rounded-lg p-0 text-muted-foreground hover:bg-muted hover:text-foreground">
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
