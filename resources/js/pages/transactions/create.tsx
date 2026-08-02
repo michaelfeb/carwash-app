@@ -1,4 +1,4 @@
-import { formatRupiah } from '@/components/app/stats-card';
+import { formatMoneyInput, formatRupiah } from '@/components/app/stats-card';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Combobox } from '@/components/ui/combobox';
@@ -65,7 +65,6 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
     // Loyalty discount calculation
     const loyaltyEligible = selectedCustomer?.loyalty_progress?.next_visit_discount ?? false;
     const loyaltyDiscountPercent = loyaltyConfig.discount_percent;
-    const originalPrice = loyaltyEligible ? price : null;
     const discountedPrice = loyaltyEligible ? Math.floor(price * (1 - loyaltyDiscountPercent / 100)) : price;
     const discountAmount = loyaltyEligible ? price - discountedPrice : 0;
     const finalPrice = loyaltyEligible ? discountedPrice : price;
@@ -313,9 +312,10 @@ export default function TransactionsCreate({ customers, carwashTypes, paymentMet
                                                 Rp
                                             </span>
                                             <Input
-                                                type="number"
-                                                value={data.price}
-                                                onChange={(e) => setData('price', e.target.value)}
+                                                type="text"
+                                                inputMode="numeric"
+                                                value={formatMoneyInput(data.price)}
+                                                onChange={(e) => setData('price', e.target.value.replace(/\D/g, ''))}
                                                 placeholder="0"
                                                 className="pl-10 text-lg font-bold"
                                             />

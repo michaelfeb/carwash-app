@@ -8,8 +8,8 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { type PaymentMethod, type Transaction } from '@/types';
-import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Car, PieChart, User, Users } from 'lucide-react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { Calendar, Car, PieChart, ReceiptText, User, Users } from 'lucide-react';
 import * as React from 'react';
 
 interface TransactionsShowProps {
@@ -42,14 +42,24 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
             <div className="space-y-6 p-4 md:p-6">
                 <FlashMessage />
 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold tracking-tight">{transaction.invoice_number}</h1>
                         <p className="text-muted-foreground">Detail transaksi</p>
                     </div>
-                    <div className="flex gap-2">
-                        <WashStatusBadge status={transaction.wash_status} />
-                        <PaymentStatusBadge status={transaction.payment_status} />
+                    <div className="flex flex-wrap items-center gap-2">
+                        {transaction.wash_status === 'done' && transaction.payment_status === 'paid' && (
+                            <Button variant="outline" asChild>
+                                <a href={`/transactions/${transaction.id}/receipt`}>
+                                    <ReceiptText className="h-4 w-4" />
+                                    Unduh Struk PDF
+                                </a>
+                            </Button>
+                        )}
+                        <div className="flex gap-2">
+                            <WashStatusBadge status={transaction.wash_status} />
+                            <PaymentStatusBadge status={transaction.payment_status} />
+                        </div>
                     </div>
                 </div>
 

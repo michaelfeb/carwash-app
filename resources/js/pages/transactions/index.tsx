@@ -12,7 +12,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type PaginatedData, type PaymentMethod, type Transaction } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Calendar, Check, CreditCard, Eye, Filter, Search, Trash2 } from 'lucide-react';
+import { Calendar, Check, CreditCard, Eye, Filter, ReceiptText, Search, Trash2 } from 'lucide-react';
 import * as React from 'react';
 
 interface TransactionsIndexProps {
@@ -194,6 +194,27 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
                             <TooltipContent>Ubah Status</TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
+
+                    {row.original.wash_status === 'done' && row.original.payment_status === 'paid' && (
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        asChild
+                                        className="h-8 w-8 rounded-lg text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                                    >
+                                        <a href={`/transactions/${row.original.id}/receipt`}>
+                                            <ReceiptText className="h-4 w-4" />
+                                            <span className="sr-only">Unduh Struk PDF</span>
+                                        </a>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Unduh Struk PDF</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )}
 
                     <TooltipProvider>
                         <Tooltip>

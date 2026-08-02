@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Staff;
+use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,11 +17,24 @@ class StaffController extends Controller
     public function index(): Response
     {
         $staffs = Staff::withCount('transactions')
-            ->leftJoin('transaction_staffs', 'staffs.id', '=', 'transaction_staffs.staff_id')
-            ->selectRaw('staffs.*, COALESCE(SUM(transaction_staffs.fee), 0) as transaction_earnings')
-            ->groupBy('staffs.id')
+            ->withCount([
+                'transactions as paid_transactions_count' => fn ($query) => $query
+                    ->where('transactions.payment_status', 'paid'),
+            ])
             ->orderBy('staffs.name')
             ->get();
+
+        $totalStaffPool = Transaction::where('payment_status', 'paid')->sum('staff_pool');
+        $totalPaidAssignments = $staffs->sum('paid_transactions_count');
+
+        $staffs->each(function (Staff $staff) use ($totalStaffPool, $totalPaidAssignments): void {
+            $estimatedEarnings = $totalPaidAssignments > 0
+                ? (int) floor(($staff->paid_transactions_count / $totalPaidAssignments) * $totalStaffPool)
+                : 0;
+
+            $staff->setAttribute('transaction_earnings', $estimatedEarnings);
+            $staff->makeHidden('paid_transactions_count');
+        });
 
         return Inertia::render('staffs/index', [
             'staffs' => $staffs,

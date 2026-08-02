@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Transactions (accessible by all authenticated users)
     Route::resource('transactions', TransactionController::class)->except(['edit', 'update']);
+    Route::get('transactions/{transaction}/receipt', [TransactionController::class, 'receipt'])->name('transactions.receipt');
     Route::put('transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.update-status');
 
     // Customers (accessible by all authenticated users)

@@ -7,11 +7,13 @@ use App\Models\Customer;
 use App\Models\PaymentMethod;
 use App\Models\Staff;
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class TransactionController extends Controller
 {
@@ -176,6 +178,26 @@ class TransactionController extends Controller
             'transaction' => $transaction,
             'paymentMethods' => PaymentMethod::where('is_active', true)->orderBy('name')->get(),
         ]);
+    }
+
+    /**
+     * Download a receipt for a completed and paid transaction.
+     */
+    public function receipt(Transaction $transaction): HttpResponse
+    {
+        abort_unless(
+            $transaction->isDone() && $transaction->isPaid(),
+            409,
+            'Receipt is only available for completed and paid transactions.'
+        );
+
+        $transaction->load(['customer', 'carwashType', 'paymentMethod', 'user']);
+
+        return Pdf::loadView('transactions.receipt', [
+            'transaction' => $transaction,
+        ])
+            ->setPaper('a6', 'portrait')
+            ->download("struk-{$transaction->invoice_number}.pdf");
     }
 
     /**
