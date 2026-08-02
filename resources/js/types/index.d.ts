@@ -24,6 +24,7 @@ export interface NavItem {
 
 export interface SharedData {
     name: string;
+    businessTimezone: string;
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;

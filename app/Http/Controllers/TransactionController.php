@@ -36,10 +36,10 @@ class TransactionController extends Controller
         }
 
         // Filter by date range — default to today if not provided
-        $dateFrom = $request->filled('date_from') ? $request->date_from : now()->toDateString();
-        $dateTo   = $request->filled('date_to')   ? $request->date_to   : now()->toDateString();
-        $query->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo);
+        $today = Transaction::currentBusinessDate()->toDateString();
+        $dateFrom = $request->filled('date_from') ? $request->date_from : $today;
+        $dateTo = $request->filled('date_to') ? $request->date_to : $today;
+        $query->createdBetweenBusinessDates($dateFrom, $dateTo);
 
         // Search by invoice number or license plate
         if ($request->filled('search')) {
@@ -58,11 +58,11 @@ class TransactionController extends Controller
         return Inertia::render('transactions/index', [
             'transactions' => $transactions,
             'filters' => [
-                'wash_status'    => $request->wash_status,
+                'wash_status' => $request->wash_status,
                 'payment_status' => $request->payment_status,
-                'date_from'      => $dateFrom,
-                'date_to'        => $dateTo,
-                'search'         => $request->search,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+                'search' => $request->search,
             ],
             'paymentMethods' => PaymentMethod::where('is_active', true)->orderBy('name')->get(),
         ]);
@@ -114,7 +114,7 @@ class TransactionController extends Controller
             'staffs.*' => ['required', 'exists:staffs,id'],
         ]);
 
-        DB::transaction(function () use ($validated, $request) {
+        DB::transaction(function () use ($validated) {
             $price = $validated['price'];
             $originalPrice = null;
             $loyaltyDiscountApplied = false;

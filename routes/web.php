@@ -16,13 +16,14 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
+    $today = Transaction::currentBusinessDate()->toDateString();
     $todayStats = [
-        'transactions_today' => Transaction::whereDate('created_at', today())->count(),
-        'queue_active'       => Transaction::whereDate('created_at', today())
+        'transactions_today' => Transaction::createdOnBusinessDate($today)->count(),
+        'queue_active' => Transaction::createdOnBusinessDate($today)
             ->whereNotNull('queue_number')
             ->where('wash_status', '!=', 'done')
             ->count(),
-        'bays_active'        => Transaction::whereDate('created_at', today())
+        'bays_active' => Transaction::createdOnBusinessDate($today)
             ->whereNotNull('slot')
             ->where('wash_status', '!=', 'done')
             ->count(),
@@ -30,7 +31,7 @@ Route::get('/', function () {
 
     return Inertia::render('welcome', [
         'canRegister' => Features::enabled(Features::registration()),
-        'stats'       => $todayStats,
+        'stats' => $todayStats,
     ]);
 })->name('home');
 
@@ -76,4 +77,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

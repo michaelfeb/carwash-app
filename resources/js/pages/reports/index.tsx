@@ -9,10 +9,13 @@ import { Head } from '@inertiajs/react';
 import { BarChart, BarChart3, Calendar, Car, CreditCard, Crown, Download, TrendingUp, Users } from 'lucide-react';
 import * as React from 'react';
 
-export default function ReportsIndex() {
-    const today = new Date().toISOString().split('T')[0];
+interface ReportsIndexProps {
+    today: string;
+    thirtyDaysAgo: string;
+}
+
+export default function ReportsIndex({ today, thirtyDaysAgo }: ReportsIndexProps) {
     const thisMonth = today.substring(0, 7);
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
     const [dailyDate, setDailyDate] = React.useState(today);
     const [monthlyMonth, setMonthlyMonth] = React.useState(thisMonth);

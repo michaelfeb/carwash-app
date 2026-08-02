@@ -212,7 +212,7 @@
     @include('reports.partials.signature')
 
     <div class="footer">
-        <p>Dicetak pada: {{ now()->format('d M Y H:i:s') }}</p>
+        <p>Dicetak pada: {{ now(\App\Models\Transaction::businessTimezone())->format('d M Y H:i:s') }}</p>
         <p style="margin-top: 5px; font-style: italic;">
             * Pembagian dihitung proporsional: (Transaksi Ditangani Staff / Total Penugasan Staff) × Pool Staff (40%)
         </p>

@@ -21,67 +21,68 @@ class TrackController extends Controller
     {
         $search = $request->query('search');
         $highlightedId = null;
+        $today = Transaction::currentBusinessDate()->toDateString();
 
         // ── Bay details with active transaction ─────────────────────
         $bays = [];
         foreach (self::BAYS as $bay) {
             $active = Transaction::with('carwashType')
-                ->whereDate('created_at', today())
+                ->createdOnBusinessDate($today)
                 ->where('slot', $bay['key'])
                 ->where('wash_status', '!=', 'done')
                 ->first();
 
             $bays[] = [
-                'key'       => $bay['key'],
-                'label'     => $bay['label'],
-                'occupied'  => $active !== null,
-                'active'    => $active ? [
-                    'id'            => $active->id,
-                    'queue_number'  => $active->queue_number,
+                'key' => $bay['key'],
+                'label' => $bay['label'],
+                'occupied' => $active !== null,
+                'active' => $active ? [
+                    'id' => $active->id,
+                    'queue_number' => $active->queue_number,
                     'license_plate' => $active->license_plate,
-                    'carwash_type'  => $active->carwashType?->name,
-                    'wash_status'   => $active->wash_status,
+                    'carwash_type' => $active->carwashType?->name,
+                    'wash_status' => $active->wash_status,
                 ] : null,
             ];
         }
 
         // ── Not washed yet (waiting list) ───────────────────────────
         $notWashed = Transaction::with('carwashType')
-            ->whereDate('created_at', today())
+            ->createdOnBusinessDate($today)
             ->whereNotNull('queue_number')
             ->whereNull('slot')
             ->where('wash_status', '!=', 'done')
             ->orderBy('queue_number')
             ->get()
             ->map(fn ($t) => [
-                'id'            => $t->id,
-                'queue_number'  => $t->queue_number,
+                'id' => $t->id,
+                'queue_number' => $t->queue_number,
                 'license_plate' => $t->license_plate,
-                'carwash_type'  => $t->carwashType?->name,
-                'wash_status'   => $t->wash_status,
+                'carwash_type' => $t->carwashType?->name,
+                'wash_status' => $t->wash_status,
             ]);
 
         // ── Already washed (done today, with or without queue_number) ─
         $alreadyWashed = Transaction::with('carwashType')
-            ->whereDate('created_at', today())
+            ->createdOnBusinessDate($today)
             ->where('wash_status', 'done')
             ->orderByDesc('updated_at')
             ->get()
             ->map(fn ($t) => [
-                'id'            => $t->id,
-                'queue_number'  => $t->queue_number,
+                'id' => $t->id,
+                'queue_number' => $t->queue_number,
                 'license_plate' => $t->license_plate,
-                'carwash_type'  => $t->carwashType?->name,
-                'wash_status'   => $t->wash_status,
+                'carwash_type' => $t->carwashType?->name,
+                'wash_status' => $t->wash_status,
             ]);
 
         // ── Search highlight ────────────────────────────────────────
         if ($search !== null && $search !== '') {
             // Search by license_plate (case-insensitive) or queue_number
-            $found = Transaction::whereDate('created_at', today())
+            $found = Transaction::createdOnBusinessDate($today)
                 ->where(function ($q) use ($search) {
                     $q->where('license_plate', 'like', "%{$search}%")
-                      ->orWhere('queue_number', is_numeric($search) ? (int) $search : null);
+                        ->orWhere('queue_number', is_numeric($search) ? (int) $search : null);
                 })
                 ->first();
 
@@ -91,11 +92,11 @@ class TrackController extends Controller
         }
 
         return Inertia::render('track/index', [
-            'bays'              => $bays,
-            'notWashed'         => $notWashed,
-            'alreadyWashed'     => $alreadyWashed,
-            'highlightedId'     => $highlightedId,
-            'search'            => $search ?? '',
+            'bays' => $bays,
+            'notWashed' => $notWashed,
+            'alreadyWashed' => $alreadyWashed,
+            'highlightedId' => $highlightedId,
+            'search' => $search ?? '',
         ]);
     }
 }

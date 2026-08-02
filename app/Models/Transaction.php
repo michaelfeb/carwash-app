@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,10 +16,12 @@ class Transaction extends Model
 
     // Share percentages
     public const OWNER_SHARE_PERCENT = 0.60;  // 60% untuk owner
+
     public const STAFF_POOL_PERCENT = 0.40;   // 40% untuk pool staff
 
     // Loyalty program constants
     public const LOYALTY_STAMP_THRESHOLD = 4;    // 4 stamps needed to unlock discount
+
     public const LOYALTY_DISCOUNT_PERCENT = 0.25; // 25% discount on 5th visit
 
     protected $fillable = [
@@ -109,8 +114,9 @@ class Transaction extends Model
      */
     public static function generateInvoiceNumber(): string
     {
-        $date = now()->format('Ymd');
-        $lastTransaction = static::whereDate('created_at', today())
+        $businessDate = static::currentBusinessDate();
+        $date = $businessDate->format('Ymd');
+        $lastTransaction = static::createdOnBusinessDate($businessDate->toDateString())
             ->orderBy('id', 'desc')
             ->first();
 
@@ -129,7 +135,7 @@ class Transaction extends Model
      */
     public function getFormattedPriceAttribute(): string
     {
-        return 'Rp ' . number_format($this->price, 0, ',', '.');
+        return 'Rp '.number_format($this->price, 0, ',', '.');
     }
 
     /**
@@ -137,7 +143,7 @@ class Transaction extends Model
      */
     public function getFormattedOwnerShareAttribute(): string
     {
-        return 'Rp ' . number_format($this->owner_share, 0, ',', '.');
+        return 'Rp '.number_format($this->owner_share, 0, ',', '.');
     }
 
     /**
@@ -145,7 +151,7 @@ class Transaction extends Model
      */
     public function getFormattedStaffPoolAttribute(): string
     {
-        return 'Rp ' . number_format($this->staff_pool, 0, ',', '.');
+        return 'Rp '.number_format($this->staff_pool, 0, ',', '.');
     }
 
     /**
@@ -172,6 +178,7 @@ class Transaction extends Model
         if ($this->loyalty_discount_applied && $this->original_price) {
             return $this->original_price - $this->price;
         }
+
         return 0;
     }
 
@@ -180,7 +187,7 @@ class Transaction extends Model
      */
     public function getFormattedDiscountAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->discount_amount, 0, ',', '.');
+        return 'Rp '.number_format($this->discount_amount, 0, ',', '.');
     }
 
     /**
@@ -189,8 +196,9 @@ class Transaction extends Model
     public function getFormattedOriginalPriceAttribute(): string
     {
         if ($this->original_price) {
-            return 'Rp ' . number_format($this->original_price, 0, ',', '.');
+            return 'Rp '.number_format($this->original_price, 0, ',', '.');
         }
+
         return $this->formatted_price;
     }
 
@@ -199,7 +207,7 @@ class Transaction extends Model
      */
     public static function generateQueueNumber(): int
     {
-        $last = static::whereDate('created_at', today())
+        $last = static::createdOnBusinessDate(static::currentBusinessDate()->toDateString())
             ->whereNotNull('queue_number')
             ->max('queue_number');
 
@@ -229,5 +237,45 @@ class Transaction extends Model
     {
         return $query->whereNotNull('queue_number')
             ->where('wash_status', '!=', 'done');
+    }
+
+    public static function businessTimezone(): string
+    {
+        return config('app.business_timezone', 'Asia/Makassar');
+    }
+
+    public static function currentBusinessDate(): CarbonImmutable
+    {
+        return CarbonImmutable::now(static::businessTimezone());
+    }
+
+    /**
+     * @return array{0: CarbonImmutable, 1: CarbonImmutable}
+     */
+    public static function businessDateBounds(string $dateFrom, string $dateTo): array
+    {
+        $timezone = static::businessTimezone();
+
+        return [
+            CarbonImmutable::createFromFormat('Y-m-d', $dateFrom, $timezone)->startOfDay()->utc(),
+            CarbonImmutable::createFromFormat('Y-m-d', $dateTo, $timezone)->endOfDay()->utc(),
+        ];
+    }
+
+    public function scopeCreatedBetweenBusinessDates(Builder $query, string $dateFrom, string $dateTo): Builder
+    {
+        [$startUtc, $endUtc] = static::businessDateBounds($dateFrom, $dateTo);
+
+        return $query->whereBetween($query->getModel()->qualifyColumn('created_at'), [$startUtc, $endUtc]);
+    }
+
+    public function scopeCreatedOnBusinessDate(Builder $query, string $date): Builder
+    {
+        return $query->createdBetweenBusinessDates($date, $date);
+    }
+
+    public function createdAtInBusinessTimezone(): CarbonInterface
+    {
+        return CarbonImmutable::parse($this->created_at)->setTimezone(static::businessTimezone());
     }
 }

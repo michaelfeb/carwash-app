@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { type PaymentMethod, type Transaction } from '@/types';
+import { formatBusinessDateTime } from '@/lib/business-date';
+import { type PaymentMethod, type SharedData, type Transaction } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { Calendar, Car, PieChart, ReceiptText, User, Users } from 'lucide-react';
 import * as React from 'react';
@@ -17,7 +18,7 @@ interface TransactionsShowProps {
 }
 
 export default function TransactionsShow({ transaction }: TransactionsShowProps) {
-    const { paymentMethods } = usePage<{ paymentMethods?: PaymentMethod[] }>().props;
+    const { paymentMethods, businessTimezone } = usePage<SharedData & { paymentMethods?: PaymentMethod[] }>().props;
     const [washStatus, setWashStatus] = React.useState(transaction.wash_status);
     const [paymentStatus, setPaymentStatus] = React.useState(transaction.payment_status);
     const [paymentMethodId, setPaymentMethodId] = React.useState(String(transaction.payment_method_id || ''));
@@ -80,7 +81,7 @@ export default function TransactionsShow({ transaction }: TransactionsShowProps)
                                 </div>
                                 <div>
                                     <p className="text-muted-foreground">Dibuat Pada</p>
-                                    <p className="font-medium">{new Date(transaction.created_at).toLocaleString('id-ID')}</p>
+                                    <p className="font-medium">{formatBusinessDateTime(transaction.created_at, businessTimezone)}</p>
                                 </div>
                                 <div>
                                     <p className="text-muted-foreground">Jenis Cuci</p>

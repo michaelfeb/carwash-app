@@ -123,7 +123,7 @@
 <body>
     @php
         $rupiah = static fn (int $amount): string => 'Rp ' . number_format($amount, 0, ',', '.');
-        $receiptDate = $transaction->paid_at ?? $transaction->created_at;
+        $receiptDate = $transaction->createdAtInBusinessTimezone();
     @endphp
 
     <div class="header">

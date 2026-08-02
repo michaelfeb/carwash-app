@@ -64,11 +64,13 @@ class Staff extends Model
      */
     public function getCurrentWeekTransactionsAttribute(): int
     {
+        $today = Transaction::currentBusinessDate();
+
         return $this->transactions()
-            ->whereBetween('transactions.created_at', [
-                now()->startOfWeek(),
-                now()->endOfWeek(),
-            ])
+            ->createdBetweenBusinessDates(
+                $today->startOfWeek()->toDateString(),
+                $today->endOfWeek()->toDateString(),
+            )
             ->count();
     }
 }

@@ -24,13 +24,15 @@ class QueueController extends Controller
      */
     public function index(Request $request): Response
     {
-        $date = $request->filled('date') ? $request->date : now()->toDateString();
+        $date = $request->filled('date')
+            ? $request->date
+            : Transaction::currentBusinessDate()->toDateString();
 
         // Fetch active slots (cars currently assigned to each bay and not yet done)
         $activeSlots = [];
         foreach (self::BAYS as $bay) {
             $activeSlots[$bay['key']] = Transaction::with(['customer', 'carwashType', 'staffs'])
-                ->whereDate('created_at', $date)
+                ->createdOnBusinessDate($date)
                 ->where('slot', $bay['key'])
                 ->where('wash_status', '!=', 'done')
                 ->first();
@@ -38,7 +40,7 @@ class QueueController extends Controller
 
         // Fetch waiting list (queued, not assigned to any slot, not done)
         $waitingList = Transaction::with(['customer', 'carwashType', 'staffs'])
-            ->whereDate('created_at', $date)
+            ->createdOnBusinessDate($date)
             ->whereNotNull('queue_number')
             ->whereNull('slot')
             ->where('wash_status', '!=', 'done')

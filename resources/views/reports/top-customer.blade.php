@@ -152,7 +152,7 @@
     @include('reports.partials.signature')
 
     <div class="footer">
-        <p>Dicetak pada: {{ now()->format('d M Y H:i:s') }}</p>
+        <p>Dicetak pada: {{ now(\App\Models\Transaction::businessTimezone())->format('d M Y H:i:s') }}</p>
     </div>
 </body>
 

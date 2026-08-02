@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
-import { type PaginatedData, type PaymentMethod, type Transaction } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
+import { formatBusinessDate } from '@/lib/business-date';
+import { type PaginatedData, type PaymentMethod, type SharedData, type Transaction } from '@/types';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Calendar, Check, CreditCard, Eye, Filter, ReceiptText, Search, Trash2 } from 'lucide-react';
 import * as React from 'react';
@@ -21,19 +22,19 @@ interface TransactionsIndexProps {
     filters: {
         wash_status?: string;
         payment_status?: string;
-        date_from?: string;
-        date_to?: string;
+        date_from: string;
+        date_to: string;
         search?: string;
     };
 }
 
 export default function TransactionsIndex({ transactions, paymentMethods, filters }: TransactionsIndexProps) {
-    const todayStr = new Date().toISOString().split('T')[0];
+    const { businessTimezone } = usePage<SharedData>().props;
     const [search, setSearch] = React.useState(filters.search || '');
     const [washStatus, setWashStatus] = React.useState(filters.wash_status || '');
     const [paymentStatus, setPaymentStatus] = React.useState(filters.payment_status || '');
-    const [dateFrom, setDateFrom] = React.useState(filters.date_from || todayStr);
-    const [dateTo, setDateTo] = React.useState(filters.date_to || todayStr);
+    const [dateFrom, setDateFrom] = React.useState(filters.date_from);
+    const [dateTo, setDateTo] = React.useState(filters.date_to);
 
     // Modal State
     const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction | null>(null);
@@ -100,7 +101,7 @@ export default function TransactionsIndex({ transactions, paymentMethods, filter
             cell: ({ row }) => (
                 <div className="flex flex-col">
                     <span className="text-xs text-muted-foreground">
-                        {new Date(row.original.created_at).toLocaleDateString('id-ID')}
+                        {formatBusinessDate(row.original.created_at, businessTimezone)}
                     </span>
                     <span className="text-sm font-semibold">{row.original.invoice_number}</span>
                 </div>

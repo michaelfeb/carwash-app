@@ -21,9 +21,13 @@ class ReportController extends Controller
      */
     public function index(): Response
     {
+        $today = Transaction::currentBusinessDate();
+
         return Inertia::render('reports/index', [
             'carwashTypes' => CarwashType::orderBy('name')->get(),
             'staffs' => Staff::orderBy('name')->get(),
+            'today' => $today->toDateString(),
+            'thirtyDaysAgo' => $today->subDays(30)->toDateString(),
         ]);
     }
 
@@ -32,11 +36,11 @@ class ReportController extends Controller
      */
     public function dailyExport(Request $request): HttpResponse
     {
-        $date = $request->input('date', today()->format('Y-m-d'));
-        $parsedDate = Carbon::parse($date);
+        $date = $request->input('date', Transaction::currentBusinessDate()->toDateString());
+        $parsedDate = Carbon::parse($date, Transaction::businessTimezone());
 
         $transactions = Transaction::with(['customer', 'carwashType', 'paymentMethod', 'user', 'staffs'])
-            ->whereDate('created_at', $parsedDate)
+            ->createdOnBusinessDate($date)
             ->orderBy('created_at')
             ->get();
 
@@ -58,18 +62,19 @@ class ReportController extends Controller
      */
     public function monthlyExport(Request $request): HttpResponse
     {
-        $month = $request->input('month', now()->format('Y-m'));
-        $parsedDate = Carbon::parse($month . '-01');
+        $month = $request->input('month', Transaction::currentBusinessDate()->format('Y-m'));
+        $parsedDate = Carbon::parse($month.'-01', Transaction::businessTimezone());
+        $dateFrom = $parsedDate->copy()->startOfMonth()->toDateString();
+        $dateTo = $parsedDate->copy()->endOfMonth()->toDateString();
 
         $transactions = Transaction::with(['carwashType'])
-            ->whereYear('created_at', $parsedDate->year)
-            ->whereMonth('created_at', $parsedDate->month)
+            ->createdBetweenBusinessDates($dateFrom, $dateTo)
             ->where('payment_status', 'paid')
             ->get();
 
         // Group by date
         $dailyData = $transactions->groupBy(function ($item) {
-            return $item->created_at->format('Y-m-d');
+            return $item->createdAtInBusinessTimezone()->format('Y-m-d');
         })->map(function ($items, $date) {
             return [
                 'date' => $date,
@@ -96,19 +101,21 @@ class ReportController extends Controller
      */
     public function carTypeExport(Request $request): HttpResponse
     {
-        $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
-        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+        $today = Transaction::currentBusinessDate();
+        $dateFrom = $request->input('date_from', $today->startOfMonth()->toDateString());
+        $dateTo = $request->input('date_to', $today->toDateString());
 
         $carTypes = CarwashType::withCount([
             'transactions' => function ($query) use ($dateFrom, $dateTo) {
-                $query->whereBetween('created_at', [$dateFrom, $dateTo])
+                $query->createdBetweenBusinessDates($dateFrom, $dateTo)
                     ->where('payment_status', 'paid');
-            }
+            },
         ])->get()->map(function ($type) use ($dateFrom, $dateTo) {
             $type->revenue = $type->transactions()
-                ->whereBetween('created_at', [$dateFrom, $dateTo])
+                ->createdBetweenBusinessDates($dateFrom, $dateTo)
                 ->where('payment_status', 'paid')
                 ->sum('price');
+
             return $type;
         });
 
@@ -132,13 +139,13 @@ class ReportController extends Controller
      */
     public function staffExport(Request $request): HttpResponse
     {
-        $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
-        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+        $today = Transaction::currentBusinessDate();
+        $dateFrom = $request->input('date_from', $today->startOfMonth()->toDateString());
+        $dateTo = $request->input('date_to', $today->toDateString());
 
-        // Get all paid transactions in the period (using whereDate for proper date comparison)
+        // Get all paid transactions in the selected Makassar business-date period.
         $transactions = Transaction::with('staffs')
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
+            ->createdBetweenBusinessDates($dateFrom, $dateTo)
             ->where('payment_status', 'paid')
             ->get();
 
@@ -163,6 +170,7 @@ class ReportController extends Controller
                 });
 
                 $staff->transaction_count = $staffTransactions->count();
+
                 return $staff;
             });
 
@@ -184,6 +192,7 @@ class ReportController extends Controller
                 $staff->share_amount = 0;
                 $staff->share_percentage = 0;
             }
+
             return $staff;
         });
 
@@ -208,16 +217,17 @@ class ReportController extends Controller
      */
     public function incomeTrendExport(Request $request): HttpResponse
     {
-        $dateFrom = $request->input('date_from', now()->subDays(30)->format('Y-m-d'));
-        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+        $today = Transaction::currentBusinessDate();
+        $dateFrom = $request->input('date_from', $today->subDays(30)->toDateString());
+        $dateTo = $request->input('date_to', $today->toDateString());
 
         $transactions = Transaction::where('payment_status', 'paid')
-            ->whereBetween('created_at', [$dateFrom, $dateTo])
+            ->createdBetweenBusinessDates($dateFrom, $dateTo)
             ->get();
 
         // Group by date
         $dailyData = $transactions->groupBy(function ($item) {
-            return $item->created_at->format('Y-m-d');
+            return $item->createdAtInBusinessTimezone()->format('Y-m-d');
         })->map(function ($items, $date) {
             return [
                 'date' => $date,
@@ -245,21 +255,21 @@ class ReportController extends Controller
      */
     public function paymentMethodExport(Request $request): HttpResponse
     {
-        $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
-        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+        $today = Transaction::currentBusinessDate();
+        $dateFrom = $request->input('date_from', $today->startOfMonth()->toDateString());
+        $dateTo = $request->input('date_to', $today->toDateString());
 
         $paymentMethods = PaymentMethod::withCount([
             'transactions' => function ($query) use ($dateFrom, $dateTo) {
-                $query->whereDate('created_at', '>=', $dateFrom)
-                    ->whereDate('created_at', '<=', $dateTo)
+                $query->createdBetweenBusinessDates($dateFrom, $dateTo)
                     ->where('payment_status', 'paid');
-            }
+            },
         ])->get()->map(function ($method) use ($dateFrom, $dateTo) {
             $method->revenue = $method->transactions()
-                ->whereDate('created_at', '>=', $dateFrom)
-                ->whereDate('created_at', '<=', $dateTo)
+                ->createdBetweenBusinessDates($dateFrom, $dateTo)
                 ->where('payment_status', 'paid')
                 ->sum('price');
+
             return $method;
         });
 
@@ -271,6 +281,7 @@ class ReportController extends Controller
             $method->percentage = $totalTransactions > 0
                 ? round(($method->transactions_count / $totalTransactions) * 100, 1)
                 : 0;
+
             return $method;
         });
 
@@ -290,30 +301,28 @@ class ReportController extends Controller
      */
     public function topCustomerExport(Request $request): HttpResponse
     {
-        $dateFrom = $request->input('date_from', now()->startOfMonth()->format('Y-m-d'));
-        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+        $today = Transaction::currentBusinessDate();
+        $dateFrom = $request->input('date_from', $today->startOfMonth()->toDateString());
+        $dateTo = $request->input('date_to', $today->toDateString());
 
         $customers = Customer::withCount([
             'transactions' => function ($query) use ($dateFrom, $dateTo) {
-                $query->whereDate('created_at', '>=', $dateFrom)
-                    ->whereDate('created_at', '<=', $dateTo)
+                $query->createdBetweenBusinessDates($dateFrom, $dateTo)
                     ->where('payment_status', 'paid');
-            }
+            },
         ])->get()->map(function ($customer) use ($dateFrom, $dateTo) {
             $customer->total_spending = $customer->transactions()
-                ->whereDate('created_at', '>=', $dateFrom)
-                ->whereDate('created_at', '<=', $dateTo)
+                ->createdBetweenBusinessDates($dateFrom, $dateTo)
                 ->where('payment_status', 'paid')
                 ->sum('price');
 
             $lastTransaction = $customer->transactions()
-                ->whereDate('created_at', '>=', $dateFrom)
-                ->whereDate('created_at', '<=', $dateTo)
+                ->createdBetweenBusinessDates($dateFrom, $dateTo)
                 ->where('payment_status', 'paid')
                 ->latest('created_at')
                 ->first();
 
-            $customer->last_transaction_date = $lastTransaction?->created_at;
+            $customer->last_transaction_date = $lastTransaction?->createdAtInBusinessTimezone()->toDateString();
 
             return $customer;
         })->filter(function ($customer) {
@@ -339,17 +348,17 @@ class ReportController extends Controller
      */
     public function transactionDistributionExport(Request $request): HttpResponse
     {
-        $dateFrom = $request->input('date_from', now()->subDays(30)->format('Y-m-d'));
-        $dateTo = $request->input('date_to', now()->format('Y-m-d'));
+        $today = Transaction::currentBusinessDate();
+        $dateFrom = $request->input('date_from', $today->subDays(30)->toDateString());
+        $dateTo = $request->input('date_to', $today->toDateString());
 
         $transactions = Transaction::where('payment_status', 'paid')
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
+            ->createdBetweenBusinessDates($dateFrom, $dateTo)
             ->get();
 
         // Group by date
         $dailyData = $transactions->groupBy(function ($item) {
-            return $item->created_at->format('Y-m-d');
+            return $item->createdAtInBusinessTimezone()->format('Y-m-d');
         })->map(function ($items, $date) {
             return [
                 'date' => $date,
